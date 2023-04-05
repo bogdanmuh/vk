@@ -1,35 +1,40 @@
 <app-side-bar></app-side-bar>
-<div class="container">
-  <div class="row">
-    <section class="chat">
-      <div class="header-chat">
-        <i class="icon fa fa-user-o" aria-hidden="true"></i>
-        <p class="name">Megan Leib</p>
-        <i class="icon clickable fa fa-ellipsis-h right" aria-hidden="true"></i>
-      </div>
-      <div class="messages-chat" >
-        <div *ngFor =" let message of messages" >
-          <div class="message">
-            <div class="photo" style="background-image: url(https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80);">
-              <div class="online"></div>
-            </div>
-            <p class="text">{{message.message}}</p>
 
-          </div>
-          <p class="time"> {{ message.date | date :'shortTime'}}</p>
+<div *ngIf="isLoggedIn; else loggedOut">
+
+  <div class="container">
+    <div class="row">
+      <section class="chat">
+        <div class="header-chat">
+          <i class="icon fa fa-user-o" aria-hidden="true"></i>
+          <p class="name">Megan Leib</p>
+          <i class="icon clickable fa fa-ellipsis-h right" aria-hidden="true"></i>
         </div>
-        <!--[ngStyle]="{
-            float: isOurAccout(message.from) ? 'left':'right'
-            }"-->
+        <div class="messages-chat">
+          <div *ngFor=" let message of messages">
+            <div class="message">
+              <div class="photo"
+                   style="background-image: url(https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80);">
+                <div class="online"></div>
+              </div>
+              <p class="text"> {{message.sender}} write {{message.message}}</p>
 
-      </div>
+            </div>
+            <p class="time"> {{ message.date | date :'shortTime'}}</p>
+          </div>
+        </div>
 
-      <div class="footer-chat">
-        <i class="icon fa fa-smile-o clickable" style="font-size:25pt;" aria-hidden="true"></i>
-        <input (keyup.enter) = "sendMessage()" type="text" [(ngModel)]="message"   class="write-message" placeholder="Type your message here"/>
-        <i class="icon send fa fa-paper-pl ane-o clickable" aria-hidden="true"></i>
-      </div>
-    </section>
+        <div class="footer-chat">
+          <i class="icon fa fa-smile-o clickable" style="font-size:25pt;" aria-hidden="true"></i>
+          <input (keyup.enter)="sendMessage()" type="text" [(ngModel)]="message" class="write-message"
+                 placeholder="Type your message here"/>
+          <i class="icon send fa fa-paper-pl ane-o clickable" aria-hidden="true"></i>
+        </div>
+      </section>
+    </div>
   </div>
 </div>
 
+<ng-template #loggedOut>
+  Авторизуйтесь!
+</ng-template>

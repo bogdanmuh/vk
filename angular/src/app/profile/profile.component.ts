@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
-import {HttpClientModule} from "@angular/common/http";
 import {ProfileService} from "./profile.service";
+import {TokenStorageService} from "../auth/token-storage.service";
 
 @Component({
   selector: 'app-profile',
@@ -15,8 +15,10 @@ export class ProfileComponent implements OnInit {
   lastName: string = ""
   date: any
   roles: string[] = []
+  public isLoggedIn: boolean = this.storageService.getLogIn();
   constructor(private actiateRoute: ActivatedRoute,
-              private profileService: ProfileService) {
+              private profileService: ProfileService,
+              private storageService : TokenStorageService) {
     this.id = actiateRoute.snapshot.params['username'];
   }
 

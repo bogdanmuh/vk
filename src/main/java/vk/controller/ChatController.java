@@ -5,12 +5,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import vk.controller.pojo.ChatRequest;
+import vk.controller.pojo.ChatResponse;
 import vk.domain.Message;
 import vk.domain.User;
 import vk.repos.MessageRepository;
 import vk.repos.UserRepository;
 
 import java.util.Date;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/")
@@ -38,7 +40,13 @@ public class ChatController {
     }
     @GetMapping("/chat")
     public ResponseEntity<?> getMessage(@RequestParam String from, @RequestParam String to) {
-        return ResponseEntity.ok(messageRepository.getMessage(from, to));
+        return ResponseEntity.ok(messageRepository.getMessage(from, to).stream()
+                .map(x -> new ChatResponse(
+                        x.getSender().getUsername(),
+                        x.getRecipient().getUsername(),
+                        x.getDate(),
+                        x.getMessage()))
+                .collect(Collectors.toList()));
     }
 
     @PostMapping("/chat/update")

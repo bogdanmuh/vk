@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {TokenStorageService} from "../auth/token-storage.service";
-import {FindResponse} from "../find/findResponse";
 import {Observable} from "rxjs";
 import {ProfileResponse} from "./profileResponse";
 

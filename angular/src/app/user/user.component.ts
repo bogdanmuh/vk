@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import {TokenStorageService} from "../auth/token-storage.service";
 
 @Component({
   selector: 'app-user',
@@ -6,5 +7,6 @@ import { Component } from '@angular/core';
   styleUrls: ['./user.component.css']
 })
 export class UserComponent {
-
+  public isLoggedIn: boolean = this.storageService.getLogIn();
+  constructor(private storageService : TokenStorageService) { }
 }

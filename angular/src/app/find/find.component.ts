@@ -14,6 +14,8 @@ export class FindComponent implements OnInit {
 
   users: String[]=[];
 
+  public isLoggedIn: boolean = this.tokenStorage.getLogIn();
+
   constructor(private tokenStorage: TokenStorageService,
               private f:AppComponent,
 

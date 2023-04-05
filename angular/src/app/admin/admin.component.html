@@ -1,1 +1,10 @@
-<p>admin works!</p>
+
+
+<div *ngIf="isLoggedIn; else loggedOut">
+  <p>admin works!</p>
+</div>
+
+<ng-template #loggedOut>
+  Авторизуйтесь!
+</ng-template>
+

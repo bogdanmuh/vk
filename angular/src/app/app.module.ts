@@ -19,6 +19,7 @@ import { FindComponent } from './find/find.component';
 import { ProfileComponent } from './profile/profile.component';
 import { ChatComponent } from './chat/chat.component';
 import { AllChatComponent } from './all-chats/all-chat.component';
+import { IonicModule } from '@ionic/angular';
 
 
 
@@ -40,7 +41,8 @@ import { AllChatComponent } from './all-chats/all-chat.component';
       BrowserModule,
       AppRoutingModule,
       FormsModule,
-      HttpClientModule
+      HttpClientModule,
+      IonicModule.forRoot()
 
     ],
   providers: [httpInterceptorProviders],

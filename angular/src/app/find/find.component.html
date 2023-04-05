@@ -1,9 +1,14 @@
 <app-side-bar></app-side-bar>
-<p>find works!</p>
-<strong>People:</strong>
-<div *ngFor =" let user of users" >
 
-  <a routerLink="/profile/{{user}}" routerLinkActive="active">{{user}}</a>
+<div *ngIf="isLoggedIn; else loggedOut">
 
+  <strong>People:</strong>
+  <div *ngFor=" let user of users">
+    <a routerLink="/profile/{{user}}" routerLinkActive="active">{{user}}</a>
+  </div>
 
 </div>
+
+<ng-template #loggedOut>
+  Авторизуйтесь!
+</ng-template>

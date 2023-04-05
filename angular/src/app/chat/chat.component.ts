@@ -15,6 +15,7 @@ export class ChatComponent implements OnInit {
   public usernameCompains: string;
   public messages: MessageResponse[] = [];
   public lastDate: Date = new Date();
+  public isLoggedIn: boolean = this.tokenStorage.getLogIn();
 
   constructor(private actiateRoute: ActivatedRoute,
               private tokenStorage: TokenStorageService,
@@ -24,13 +25,16 @@ export class ChatComponent implements OnInit {
     this.chatingService.getFirstMessages(this.tokenStorage.getUsername(), this.usernameCompains, this.tokenStorage.getBearerToken())
       .subscribe(
         data => {
+          console.log(data);
           this.messages = data;
         },
       )
     console.log("конструктор" + this.lastDate);
     setInterval(()=>{
-      let messageRequest =
+
+      /*let messageRequest =
         new MessageRequest(this.tokenStorage.getUsername(), this.usernameCompains)
+
       messageRequest.date = this.lastDate;
       this.chatingService.updatechat(messageRequest, this.tokenStorage.getBearerToken())
         .subscribe(
@@ -38,12 +42,15 @@ export class ChatComponent implements OnInit {
             console.log(data);
 
           },
-        )
+        )*/
     }, 1000 );
   }
 
   ngOnInit(): void {}
 
+  refresh(): void {
+    window.location.reload();
+  }
   isOurAccout(username: string): boolean {
     return username == this.tokenStorage.getUsername();
   }

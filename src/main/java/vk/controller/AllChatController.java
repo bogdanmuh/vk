@@ -1,14 +1,16 @@
 package vk.controller;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import vk.repos.UserRepository;
+import org.springframework.web.bind.annotation.*;
+import vk.controller.pojo.AllChatResponse;
+import vk.repos.MessageRepository;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
 
 @RestController
 @RequestMapping("/")
@@ -16,9 +18,16 @@ import vk.repos.UserRepository;
 @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
 public class AllChatController {
     @Autowired
-    private UserRepository userRepository;
+    private MessageRepository messageRepository;
     @GetMapping("/allChat")
-    public ResponseEntity<?> getCompanions() {
-        return ResponseEntity.ok(userRepository.findAll());
+    public ResponseEntity<?> getCompanions(@RequestParam String to) {
+        return ResponseEntity.ok(messageRepository.findDistinctTop20ByRecipient(to).stream()
+                .map(x -> new AllChatResponse(
+                        x.getSender().getUsername(),
+                        x.getSender().getFirstName(),
+                        x.getSender().getLastName(),
+                        x.getDate(),
+                        x.getMessage()))
+                .collect(Collectors.toList()));
     }
 }

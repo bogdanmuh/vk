@@ -13,7 +13,7 @@ export class AppComponent implements OnInit {
   roles!: string[];
   authority!: string;
   text!: string;
-   logIn = false;
+  logIn = false;
   public password: string = "";
   title: string = "";
   constructor(private tokenStorage: TokenStorageService,

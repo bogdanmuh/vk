@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {User} from "./User";
 import {AllChatService} from "./all-chat.service";
+import {TokenStorageService} from "../auth/token-storage.service";
 
 @Component({
   selector: 'app-all-chat',
@@ -10,8 +11,12 @@ import {AllChatService} from "./all-chat.service";
 export class AllChatComponent  implements OnInit {
   public message: string = "";
   public users: User[] = [];
+  public currentDate: Date = new Date();
 
-  constructor(private allChatService : AllChatService) { }
+  isLoggedIn: boolean = this.storageService.getLogIn();
+
+  constructor(private allChatService : AllChatService,
+              private storageService : TokenStorageService) { }
 
   ngOnInit(): void {
     this.getCompanions()
@@ -19,10 +24,16 @@ export class AllChatComponent  implements OnInit {
   getCompanions(): void {
     this.allChatService.getCompanions().subscribe(
       data => {
-        console.log(data);
         this.users = data;
-        console.log(this.users);
         alert("success")
       },error=>alert("unsuccess"))
+  }
+
+
+  diffGetTime(date: any): Date {
+
+    let d = new Date(Date.now() - date);
+    console.log(new Date(Date.now() - date.getTime()))
+    return d;
   }
 }

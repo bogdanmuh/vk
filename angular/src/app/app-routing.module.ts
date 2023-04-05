@@ -3,7 +3,6 @@ import {RouterModule, Routes} from '@angular/router';
 
 import {RegistrationComponent} from './registration/registration.component';
 import {LoginComponent} from './login/login.component';
-//import { PmComponent } from './pm/pm.component';
 import {AdminComponent} from './admin/admin.component';
 import {FindComponent} from "./find/find.component";
 import {ProfileComponent} from "./profile/profile.component";

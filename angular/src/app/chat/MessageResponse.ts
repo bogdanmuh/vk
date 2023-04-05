@@ -1,11 +1,11 @@
 export class  MessageResponse {
   constructor(public message: string,
-              public from: string,
+              public sender: string,
               public date: Date,
-              public to: string) {
+              public recipient: string) {
     this.message = message;
-    this.from = from;
+    this.sender = sender;
     this.date = date;
-    this.to = to;
+    this.recipient = recipient;
   }
 }

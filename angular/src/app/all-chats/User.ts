@@ -1,14 +1,14 @@
 export class User {
-  constructor(public firstName: string,
-              public lastName: string,
-              public date: string ,
-              public username: string ,
-              public roles: string[]
+  constructor(public sender: string,
+              public date: Date ,
+              public message: string ,
+              public firstName: string ,
+              public lastName: string ,
               ) {
+    this.sender = sender;
+    this.date = date;
+    this.message = message;
     this.firstName = firstName;
     this.lastName = lastName;
-    this.date = date;
-    this.username = username;
-    this.roles = roles;
   }
 }

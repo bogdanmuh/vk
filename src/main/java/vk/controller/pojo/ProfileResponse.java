@@ -4,22 +4,31 @@ import java.util.Date;
 import java.util.List;
 
 public class ProfileResponse {
-
     private String firstName;
     private String lastName;
     private Date date;
     private String username;
     private String email;
     List<String> roles;
+    private ImageModel imageModel;
+
 
     public ProfileResponse(String firstName, String lastName, Date date,
-                           String username, String email, List<String> roles) {
+                           String username, String email,ImageModel imageModel, List<String> roles ) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.date = date;
         this.username = username;
         this.email = email;
+        this.imageModel = imageModel;
         this.roles = roles;
+    }
+    public ImageModel getImageModel() {
+        return imageModel;
+    }
+
+    public void setImageModel(ImageModel imageModel) {
+        this.imageModel = imageModel;
     }
 
     public String getFirstName() {

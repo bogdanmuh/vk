@@ -7,6 +7,21 @@
   <strong>date: </strong> {{date}}  <br/>
 </div>
 
+
+<div class="строка контейнера">
+  <div class="col-md-6">
+    <input type="file" (change)="onFileChanged($event)">
+
+  </div>
+  <div class="col-md-6">
+    <input type="button" (click)="onUpload()" value="upload">
+  </div>
+</div>
+
+
+<img [src]="retrievedImage">
+
+
 <ng-template #loggedOut>
   Авторизуйтесь!
 </ng-template>

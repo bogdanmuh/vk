@@ -8,6 +8,7 @@ import {FindComponent} from "./find/find.component";
 import {ProfileComponent} from "./profile/profile.component";
 import {ChatComponent} from "./chat/chat.component";
 import {AllChatComponent} from "./all-chats/all-chat.component";
+import {ActivateComponent} from "./activate/activate.component";
 
 
 const routes: Routes = [
@@ -31,6 +32,10 @@ const routes: Routes = [
   {
     path: 'profile/:username',
     component: ProfileComponent
+  },
+  {
+    path: 'activate/:code',
+    component: ActivateComponent
   },
   {
     path: 'chat/:username',

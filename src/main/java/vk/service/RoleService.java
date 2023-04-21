@@ -13,6 +13,7 @@ public class RoleService {
     @Autowired
     RoleRepository roleRepository;
     public RoleService(){}
+    //переделать
     public Set<Role> validationRole(Set<String> reqRoles){
         Set<Role> roles = new HashSet<>();
         if (reqRoles == null) {

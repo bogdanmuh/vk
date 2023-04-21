@@ -5,21 +5,26 @@
   <strong>firstName: </strong> {{firstName}}  <br/>
   <strong>lastName: </strong> {{lastName}}  <br/>
   <strong>date: </strong> {{date}}  <br/>
+  <strong>friends: </strong> <div *ngFor=" let role of friends">{{role}} </div><br/>
+
+  <div *ngIf="isCurrentUser; else a">
+    <div class="строка контейнера">
+      <div class="col-md-6">
+        <input type="file" (change)="onFileChanged($event)">
+
+      </div>
+      <div class="col-md-6">
+        <input type="button" (click)="onUpload()" value="upload">
+      </div>
+    </div>
+  </div>
+  <img [src]="retrievedImage">
+  <ng-template #a>
+    <input type="button" (click)="addFriends()" value="Добавить в друзья ">!
+  </ng-template>
 </div>
 
 
-<div class="строка контейнера">
-  <div class="col-md-6">
-    <input type="file" (change)="onFileChanged($event)">
-
-  </div>
-  <div class="col-md-6">
-    <input type="button" (click)="onUpload()" value="upload">
-  </div>
-</div>
-
-
-<img [src]="retrievedImage">
 
 
 <ng-template #loggedOut>

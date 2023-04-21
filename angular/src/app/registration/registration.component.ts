@@ -19,7 +19,7 @@ export class RegistrationComponent implements OnInit {
   constructor(private authService: AuthService) { }
 
   userRegister() {
-    let signupInfo = new SignupInfo(this.firstName, this.lastName,this.date, this.username, this.password, this.email)
+    let signupInfo = new SignupInfo(this.firstName, this.lastName,this.date, this.username, this.email,this.password)
     console.log("регистрация нового пользователя");
     this.authService.signUp(signupInfo).subscribe(
       data=>alert(data + "success"),

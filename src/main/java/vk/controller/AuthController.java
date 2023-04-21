@@ -7,17 +7,14 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import vk.domain.User;
 import vk.pojo.JwtResponse;
 import vk.pojo.LoginRequest;
 import vk.pojo.MessageResponse;
 import vk.pojo.SignupRequest;
-import vk.repos.UserRepository;
 import vk.security.jwt.JwtUtils;
-import vk.service.RoleService;
 import vk.service.UserDetailsImpl;
+import vk.service.UserService;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,15 +24,11 @@ import java.util.stream.Collectors;
 @CrossOrigin(origins ="*")
 public class AuthController {
     @Autowired
-    AuthenticationManager authenticationManager;
+    private AuthenticationManager authenticationManager;
     @Autowired
-    UserRepository userRespository;
+    private UserService userService;
     @Autowired
-    RoleService roleService;
-    @Autowired
-    PasswordEncoder passwordEncoder;
-    @Autowired
-    JwtUtils jwtUtils;
+    private JwtUtils jwtUtils;
     @PostMapping("/signin")
     public ResponseEntity<?> authUser(@RequestBody LoginRequest loginRequest) {
         Authentication authentication = authenticationManager
@@ -50,7 +43,7 @@ public class AuthController {
         List<String> roles = userDetails.getAuthorities().stream()
                 .map(item -> item.getAuthority())
                 .collect(Collectors.toList());
-
+        //если activateCode есть то запретить вход.
         return ResponseEntity.ok(new JwtResponse(jwt,
                 userDetails.getId(),
                 userDetails.getUsername(),
@@ -60,29 +53,17 @@ public class AuthController {
 
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@RequestBody SignupRequest signupRequest) {
-        roleService.createRole();
-        if (userRespository.existsByUsername(signupRequest.getUsername())) {
+        MessageResponse  response  = userService.registerUser(signupRequest);
+        if(response.getMessage().startsWith("Error")) {
             return ResponseEntity
                     .badRequest()
-                    .body(new MessageResponse("Error: Username is exist"));
+                    .body(response);
+        } else {
+            return ResponseEntity.ok(response);
         }
-
-        if (userRespository.existsByEmail(signupRequest.getEmail())) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(new MessageResponse("Error: Email is exist"));
-        }
-
-        User user = new User(
-                signupRequest.getFirstName(),
-                signupRequest.getLastName(),
-                signupRequest.getDate(),
-                signupRequest.getUsername(),
-                signupRequest.getEmail(),
-                passwordEncoder.encode(signupRequest.getPassword()),
-                roleService.validationRole(signupRequest.getRoles()));
-
-        userRespository.save(user);
-        return ResponseEntity.ok(new MessageResponse("User CREATED"));
+    }
+    @GetMapping("/activate/{code}")
+    public ResponseEntity<?> activate(@PathVariable String code){
+        return ResponseEntity.ok(userService.activateUser(code));
     }
 }

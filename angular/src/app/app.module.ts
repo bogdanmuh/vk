@@ -20,6 +20,7 @@ import { ProfileComponent } from './profile/profile.component';
 import { ChatComponent } from './chat/chat.component';
 import { AllChatComponent } from './all-chats/all-chat.component';
 import { IonicModule } from '@ionic/angular';
+import { ActivateComponent } from './activate/activate.component';
 
 
 
@@ -35,7 +36,8 @@ import { IonicModule } from '@ionic/angular';
     FindComponent,
     ProfileComponent,
     ChatComponent,
-    AllChatComponent
+    AllChatComponent,
+    ActivateComponent
   ],
     imports: [
       BrowserModule,

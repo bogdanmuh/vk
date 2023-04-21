@@ -19,7 +19,7 @@ public class User {
     private String lastName;
     private Date date;
 
-
+    private String activateCode;
     private String email;
     private String password;
     @ManyToMany(fetch = FetchType.EAGER)
@@ -30,15 +30,30 @@ public class User {
 
     public User() {}
 
-    public User(String firstName, String lastName, Date date,
-                String username, String email, String password, Set<Role> roles) {
+    public User(String username,
+                String firstName,
+                String lastName,
+                Date date,
+                String activationCode,
+                String email,
+                String password,
+                Set<Role> roles) {
+        this.username = username;
         this.firstName = firstName;
         this.lastName = lastName;
         this.date = date;
-        this.username = username;
+        this.activateCode = activationCode;
         this.email = email;
         this.password = password;
         this.roles = roles;
+    }
+
+    public String getActivateCode() {
+        return activateCode;
+    }
+
+    public void setActivateCode(String activateCode) {
+        this.activateCode = activateCode;
     }
 
     public String getFirstName() {return firstName;}

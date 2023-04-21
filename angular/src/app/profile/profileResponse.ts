@@ -5,7 +5,8 @@ export class ProfileResponse {
               public username: string,
               public email: string,
               public imageModel: any,
-              public roles: string[]) {
+              public roles: string[],
+              public friends: string[]) {
 
     this.imageModel = imageModel;
     this.firstName = firstName;
@@ -14,5 +15,6 @@ export class ProfileResponse {
     this.email = email;
     this.username = username;
     this.roles = roles;
+    this.friends = friends;
   }
 }

@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
+import {HttpHeaders} from "@angular/common/http";
 
 const TOKEN_KEY = 'AuthToken';
 const USERNAME_KEY = 'AuthUsername';
@@ -56,4 +57,15 @@ export class TokenStorageService {
     }
     return this.roles;
   }
+
+  public getHttpOptions():{ headers: HttpHeaders } {
+    return {
+      headers: new HttpHeaders({
+        'content-type': 'application/json',
+        'Authorization': `Bearer ${this.getToken()}`
+      }),
+    };
+  }
+
+
 }

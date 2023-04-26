@@ -9,11 +9,9 @@ import {AddFriendsRequest} from "./addFriendsRequest";
   providedIn: 'root'
 })
 export class ProfileService {
-
   private findPersonUrl = 'http://localhost:8080/profile/';
   private loadImageUrl = 'http://localhost:8080/profile/upload';
   private getMainImageUrl = 'http://localhost:8080/profile/image';
-
   private addFriends = 'http://localhost:8080/profile/friend';
 
 
@@ -21,26 +19,12 @@ export class ProfileService {
               private tokenStorage: TokenStorageService) {}
 
   getUser(userId:string): Observable<ProfileResponse> {
-    const httpOptions = {
-      headers: new HttpHeaders({
-        'content-type': 'application/json',
-        'Authorization': `Bearer ${this.tokenStorage.getBearerToken()}`,
-      }),
-    };
-    console.log(userId)
-    return this.http.get<ProfileResponse>(this.findPersonUrl + userId, httpOptions);
+    return this.http.get<ProfileResponse>(this.findPersonUrl + userId,  this.tokenStorage.getHttpOptions());
   }
 
   loadImage(selectedFile: File) {
-    const httpOptions = {
-      headers: new HttpHeaders({
-        'content-type': 'application/json',
-        'Authorization': `Bearer ${this.tokenStorage.getBearerToken()}`
-      }),
-    };
     const uploadImageData = new FormData();
     uploadImageData.append('imageFile', selectedFile, this.tokenStorage.getUsername());
-
     return this.http.post(this.loadImageUrl, uploadImageData, {observe: 'response'});
   }
 
@@ -49,13 +33,7 @@ export class ProfileService {
   }
 
   addFriend(addFriendsRequest : AddFriendsRequest){
-    const httpOptions = {
-      headers: new HttpHeaders({
-        'content-type': 'application/json',
-        'Authorization': `Bearer ${this.tokenStorage.getBearerToken()}`
-      }),
-    };
-    return this.http.post(this.addFriends, addFriendsRequest, httpOptions);
+    return this.http.post(this.addFriends, addFriendsRequest, this.tokenStorage.getHttpOptions());
   }
 
 

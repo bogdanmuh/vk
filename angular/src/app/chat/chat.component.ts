@@ -4,6 +4,7 @@ import {MessageRequest} from "./MesssageRequest";
 import {TokenStorageService} from "../auth/token-storage.service";
 import {ChatingService} from "./chating.service";
 import {MessageResponse} from "./MessageResponse";
+import {WebSocketService} from "../services/web-socket.service";
 
 @Component({
   selector: 'app-chat',
@@ -16,10 +17,12 @@ export class ChatComponent implements OnInit {
   public messages: MessageResponse[] = [];
   public lastDate: Date = new Date();
   public isLoggedIn: boolean = this.tokenStorage.getLogIn();
+  public webSocket: any;
 
   constructor(private actiateRoute: ActivatedRoute,
               private tokenStorage: TokenStorageService,
               private chatingService: ChatingService) {
+    this.webSocket = new WebSocketService(tokenStorage, this);
     this.usernameCompains = actiateRoute.snapshot.params['username'];
     console.log("конструктор");
     this.chatingService.getFirstMessages(this.tokenStorage.getUsername(), this.usernameCompains, this.tokenStorage.getBearerToken())
@@ -30,40 +33,23 @@ export class ChatComponent implements OnInit {
         },
       )
     console.log("конструктор" + this.lastDate);
-    setInterval(()=>{
-
-      /*let messageRequest =
-        new MessageRequest(this.tokenStorage.getUsername(), this.usernameCompains)
-
-      messageRequest.date = this.lastDate;
-      this.chatingService.updatechat(messageRequest, this.tokenStorage.getBearerToken())
-        .subscribe(
-          data => {
-            console.log(data);
-
-          },
-        )*/
-    }, 1000 );
   }
 
   ngOnInit(): void {}
 
-  refresh(): void {
-    window.location.reload();
-  }
-  isOurAccout(username: string): boolean {
-    return username == this.tokenStorage.getUsername();
-  }
   sendMessage() {
     let messageRequest =
-      new MessageRequest(this.tokenStorage.getUsername(), this.usernameCompains)
-    messageRequest.message = this.message;
+      new MessageRequest(this.tokenStorage.getUsername(), this.usernameCompains,this.message)
     console.log("отправляем сообщение" + messageRequest);
-    this.chatingService.chating(messageRequest, this.tokenStorage.getBearerToken())
-      .subscribe(
-        error=>{
-          alert("unsuccess")
-        })
+    this.webSocket.send(messageRequest);
+    let messageResponse = new MessageResponse(messageRequest.message,messageRequest.from,messageRequest.date,messageRequest.to)
+    this.addNewMessage(messageResponse);
   }
+  addNewMessage(message : MessageResponse){
+    this.messages.push(message);
+  }
+
+
+
 
 }

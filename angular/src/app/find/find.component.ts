@@ -24,7 +24,7 @@ export class FindComponent implements OnInit {
   getUser(user: string){
     console.log(user)
     let find = new FindRequest(this.f.text);
-    this.findServices.findInfo(find, this.tokenStorage.getBearerToken()).subscribe( data => {
+    this.findServices.findInfo(find, this.tokenStorage.getHttpOptions()).subscribe( data => {
       console.log(data);
       console.log(data.users);
       this.users = data.users;
@@ -35,7 +35,7 @@ export class FindComponent implements OnInit {
   findUsers() {
     console.log("find users"+this.f.text,this.tokenStorage.getToken());
     let find = new FindRequest(this.f.text);
-    this.findServices.findInfo(find, this.tokenStorage.getBearerToken()).subscribe( data => {
+    this.findServices.findInfo(find, this.tokenStorage.getHttpOptions()).subscribe( data => {
       console.log(data);
       console.log(data.users);
       this.users = data.users;

@@ -8,7 +8,7 @@
 
       <!--header-->
       <div class="header">
-        <div class="userimg">
+        <div class="userImg">
           <img src="" class="cover">
         </div>
         <ul class="nav_icons">
@@ -16,7 +16,7 @@
             <ion-icon name="scan-circle-outline"></ion-icon>
           </li>
           <li>
-            <ion-icon name="chatbox"></ion-icon>
+            <ion-icon name="chatterbox"></ion-icon>
           </li>
           <li>
             <ion-icon name="ellipsis-vertical"></ion-icon>
@@ -34,9 +34,9 @@
 
       <!--chat list-->
       <div *ngFor=" let user of users">
-        <div class="chatlist">
+        <div class="chatList">
           <div class="block active" routerLink="/chat/{{user.sender}}" routerLinkActive="active">
-            <div class="imgbx">
+            <div class="img-bx">
               <img src="" class="cover">
             </div>
             <div class="details">

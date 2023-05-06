@@ -16,7 +16,7 @@ export class ActivateComponent {
 
   code: String = ""
   message: String = ""
-  constructor(private actiateRoute: ActivatedRoute,
+  constructor(private activateRoute: ActivatedRoute,
               private http: HttpClient) {
     const httpOptions = {
       headers: new HttpHeaders({
@@ -24,7 +24,7 @@ export class ActivateComponent {
       }),
     };
     this.http.get <Message>(
-      'http://localhost:8080/activate/' + actiateRoute.snapshot.params['code'],
+      'http://localhost:8080/activate/' + activateRoute.snapshot.params['code'],
       httpOptions).subscribe(data => {
       this.message = data.message;
     })

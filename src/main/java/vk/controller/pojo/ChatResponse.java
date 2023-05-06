@@ -1,8 +1,5 @@
 package vk.controller.pojo;
 
-import vk.domain.User;
-
-import javax.persistence.*;
 import java.util.Date;
 
 public class ChatResponse {

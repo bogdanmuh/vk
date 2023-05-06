@@ -11,6 +11,7 @@ import vk.repos.UserRepository;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -20,20 +21,20 @@ public class MessageService {
     @Autowired
     private UserRepository userRepository;
 
-
-    public  void saveMessage(ChatRequest chatRequest) {
-        User from = userRepository.findByUsername(chatRequest.getFrom()).get();
-        User to = userRepository.findByUsername(chatRequest.getTo()).get();
-
-        Message message = new Message();
-        message.setSender(from);
-        message.setRecipient(to);
-        message.setMessage(chatRequest.getMessage());
-        message.setDate(new Date());
-
-        messageRepository.save(message);
+    public void saveMessage(ChatRequest chatRequest) {
+        Optional<User> from = userRepository.findByUsername(chatRequest.getFrom());
+        Optional<User> to = userRepository.findByUsername(chatRequest.getTo());
+        if (from.isPresent() && to.isPresent()) {
+            Message message = new Message();
+            message.setSender(from.get());
+            message.setRecipient(to.get());
+            message.setMessage(chatRequest.getMessage());
+            message.setDate(new Date());
+            messageRepository.save(message);
+        } else {
+            System.out.println("Невозможно сохранить сообщенение отправитель или получатель  не найдены ");
+        }
     }
-
     public List<ChatResponse> getMessage(String from, String to) {
         return messageRepository.getMessage(from, to).stream()
                 .map(x -> new ChatResponse(

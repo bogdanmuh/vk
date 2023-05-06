@@ -30,7 +30,7 @@ public class ChatController {
                             chatMessage.getTo(),
                             chatMessage.getDate(),
                             chatMessage.getMessage()));
-}
+    }
 
     @PostMapping("/chat")
     public ResponseEntity<?> saveMessage(@RequestBody ChatRequest chatRequest) {

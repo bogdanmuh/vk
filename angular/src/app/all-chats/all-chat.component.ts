@@ -26,7 +26,7 @@ export class AllChatComponent  implements OnInit {
       data => {
         this.users = data;
         alert("success")
-      },error=>alert("unsuccess"))
+      },error=>alert("unsuccessful"))
   }
 
 

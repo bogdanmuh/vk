@@ -49,10 +49,8 @@ public class Friends {
             return false;
         }
         if (obj instanceof Friends) {
-            if (((Friends) obj).getFriend_one().equals(getFriend_two()) &&
-                    ((Friends) obj).getFriend_two().equals(getFriend_one())) {
-                return true;
-            }
+            return ((Friends) obj).getFriend_one().equals(getFriend_two()) &&
+                    ((Friends) obj).getFriend_two().equals(getFriend_one());
         }
 
         return false;

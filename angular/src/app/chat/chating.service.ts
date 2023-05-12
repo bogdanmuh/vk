@@ -33,7 +33,7 @@ export class ChatingService {
     return this.http.post<MessageResponse[]>(this.updatechatUrl, messageRequest, httpOptions);
   }
 
-  getFirstMessages(from: string, to: string, token: string): Observable<MessageResponse[]> {
+  getFirstMessages(from: string, to: string, token: string){
     const httpOptions = {
       headers: new HttpHeaders({
         'content-type': 'application/json',
@@ -41,7 +41,7 @@ export class ChatingService {
       }),
     };
     console.log(this.chatingUrl + "?from=" + from + "&to=" + to)
-    return this.http.get<MessageResponse[]>(
+    return this.http.get(
       this.chatingUrl+"?from=" + from + "&to=" + to,
       httpOptions);
   }

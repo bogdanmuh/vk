@@ -12,12 +12,13 @@ import vk.pojo.SignupRequest;
 import vk.repos.UserRepository;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 public class UserService {
+
+    public static final Map<String,String> onlineUsers = new HashMap<>();//  подумать
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -39,7 +40,11 @@ public class UserService {
         return new FindResponse(users);
     }
 
-    public ProfileResponse getUser(String userId) throws IOException {
+    public Optional<User> getUser(String userId) {
+        return userRepository.findByUsername(userId);
+    }
+
+    public ProfileResponse getProfileResponse(String userId) throws IOException {
         User user = userRepository.findByUsername(userId).get();
 
         return new ProfileResponse(
@@ -52,8 +57,8 @@ public class UserService {
                 user.getRoles().stream()
                         .map(data->data.getName().toString())
                         .collect(Collectors.toList()),
-                friendsService.getFriends(userId));
-
+                friendsService.getFriends(userId),
+                isOnline(user.getUsername()));
     }
 
     public ActivateMessageResponse activateUser(String code) {
@@ -67,6 +72,15 @@ public class UserService {
         return new ActivateMessageResponse("User successfully activated");
 
     }
+    public void editLastOnline(String sessionId) {
+        Optional<User> option= userRepository.findByUsername(removeOnlineUser(sessionId));
+        if (option.isPresent()){
+            User user = option.get();
+            user.setLastOnline(new Date());
+            userRepository.save(user);
+        }
+    }
+    
 
     public MessageResponse registerUser(SignupRequest signupRequest) {
         roleService.createRole();
@@ -84,14 +98,22 @@ public class UserService {
                 UUID.randomUUID().toString(),
                 signupRequest.getEmail(),
                 passwordEncoder.encode(signupRequest.getPassword()),
-                roleService.validationRole(signupRequest.getRoles()));
+                roleService.validationRole(signupRequest.getRoles()),
+                signupRequest.getDate());
 
         userRepository.save(user);
         mailSender.sendValidationMessage(user);
         
         return new MessageResponse("User CREATED");
     }
-
-
+    public void addUser(String sessionId,String username){
+        onlineUsers.put(sessionId,username);
+    }
+    public boolean isOnline(String username){
+        return onlineUsers.containsValue(username);
+    }
+    public String removeOnlineUser(String sessionId){
+        return onlineUsers.remove(sessionId);
+    }
 
 }

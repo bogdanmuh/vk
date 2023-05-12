@@ -1,4 +1,5 @@
 export class  MessageResponse {
+  public event: string = "";
   constructor(public message: string,
               public sender: string,
               public date: Date,

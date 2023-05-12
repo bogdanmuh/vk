@@ -1,10 +1,6 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
-import {ProfileService} from "../profile/profile.service";
-import {TokenStorageService} from "../auth/token-storage.service";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
-import {ProfileResponse} from "../profile/profileResponse";
-import {Observable} from "rxjs";
 import {Message} from "./Message";
 
 @Component({

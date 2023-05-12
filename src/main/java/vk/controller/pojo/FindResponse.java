@@ -1,11 +1,10 @@
 package vk.controller.pojo;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class FindResponse {
 
-    private List<String> users = new ArrayList<>();
+    private List<String> users;
     public FindResponse(List<String> users){
         this.users = users;
     }

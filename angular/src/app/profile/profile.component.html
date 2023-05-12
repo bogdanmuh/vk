@@ -5,6 +5,7 @@
   <strong>firstName: </strong> {{firstName}}  <br/>
   <strong>lastName: </strong> {{lastName}}  <br/>
   <strong>date: </strong> {{date}}  <br/>
+  <strong>online: </strong> {{isOnline}}  <br/>
   <strong>friends: </strong> <div *ngFor=" let role of friends">{{role}} </div><br/>
 
   <div *ngIf="isCurrentUser; else a">

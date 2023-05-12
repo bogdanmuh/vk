@@ -14,6 +14,7 @@ export class ProfileComponent implements OnInit {
   username: string = ""
   firstName: string = ""
   lastName: string = ""
+  isOnline: boolean = false
   date: any
   roles: string[] = []
   friends: string[] = []
@@ -44,6 +45,7 @@ export class ProfileComponent implements OnInit {
       this.date = data.date;
       this.friends = data.friends;
       this.retrieveResonse = data.imageModel;
+      this.isOnline = data.online;
       this.base64Data = this.retrieveResonse.picByte;
       this.retrievedImage = 'data:image/jpeg;base64,' + this.base64Data;
       alert("success")

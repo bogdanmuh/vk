@@ -9,12 +9,16 @@ public class ChatResponse {
     private String recipient;
     private Date date;
     private String message;
+    private String event;
 
-    public ChatResponse(String sender, String recipient, Date date, String message) {
+
+
+    public ChatResponse(String sender, String recipient, Date date, String message, String event) {
         this.sender = sender;
         this.recipient = recipient;
         this.date = date;
         this.message = message;
+        this.event = event;
     }
     public String getSender() {
         return sender;
@@ -47,5 +51,6 @@ public class ChatResponse {
     public void setMessage(String message) {
         this.message = message;
     }
-
+    public String getEvent() {return event;}
+    public void setEvent(String event) {this.event = event;}
 }

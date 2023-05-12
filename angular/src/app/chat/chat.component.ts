@@ -14,6 +14,7 @@ import {WebSocketService} from "../services/web-socket.service";
 export class ChatComponent implements OnInit {
   public message: string = "";
   public usernameCompains: string;
+  public isCompainsOnline: boolean = false;
   public messages: MessageResponse[] = [];
   public lastDate: Date = new Date();
   public isLoggedIn: boolean = this.tokenStorage.getLogIn();
@@ -27,9 +28,10 @@ export class ChatComponent implements OnInit {
     console.log("конструктор");
     this.chatingService.getFirstMessages(this.tokenStorage.getUsername(), this.usernameCompains, this.tokenStorage.getBearerToken())
       .subscribe(
-        data => {
+        (data: any)  => {
           console.log(data);
-          this.messages = data;
+          this.messages = data["list"];
+          this.isCompainsOnline = data["online"];
         },
       )
     console.log("конструктор" + this.lastDate);
@@ -49,7 +51,12 @@ export class ChatComponent implements OnInit {
     this.messages.push(message);
   }
 
-
+  printOnline(user:string, online:boolean):boolean{
+    if(user == this.usernameCompains ){
+      return online
+    }
+    return true;
+  }
 
 
 }

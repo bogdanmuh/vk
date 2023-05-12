@@ -22,6 +22,10 @@ public class User {
     private String activateCode;
     private String email;
     private String password;
+
+
+
+    private Date lastOnline;
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -37,7 +41,8 @@ public class User {
                 String activationCode,
                 String email,
                 String password,
-                Set<Role> roles) {
+                Set<Role> roles,
+                Date lastOnline) {
         this.username = username;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -46,8 +51,11 @@ public class User {
         this.email = email;
         this.password = password;
         this.roles = roles;
+        this.lastOnline = lastOnline;
     }
+    public Date getLastOnline() {return lastOnline;}
 
+    public void setLastOnline(Date lastOnline) {this.lastOnline = lastOnline;}
     public String getActivateCode() {
         return activateCode;
     }

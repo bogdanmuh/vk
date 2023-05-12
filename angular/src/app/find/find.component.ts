@@ -21,17 +21,6 @@ export class FindComponent implements OnInit {
 
               private findServices: FindSericeService) { }
 
-  getUser(user: string){
-    console.log(user)
-    let find = new FindRequest(this.f.text);
-    this.findServices.findInfo(find, this.tokenStorage.getHttpOptions()).subscribe( data => {
-      console.log(data);
-      console.log(data.users);
-      this.users = data.users;
-      console.log(this.users);
-      alert("success")
-    },error=>alert("unsuccess"))
-  }
   findUsers() {
     console.log("find users"+this.f.text,this.tokenStorage.getToken());
     let find = new FindRequest(this.f.text);

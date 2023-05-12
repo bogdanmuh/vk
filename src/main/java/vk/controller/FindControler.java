@@ -23,6 +23,6 @@ public class FindControler {
     }
     @GetMapping("profile/{userId}")
     public ResponseEntity<?> getUser(@PathVariable String userId) throws IOException {
-        return ResponseEntity.ok (userService.getUser(userId));
+        return ResponseEntity.ok (userService.getProfileResponse(userId));
     }
 }

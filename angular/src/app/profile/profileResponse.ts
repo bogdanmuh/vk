@@ -5,6 +5,7 @@ export class ProfileResponse {
               public username: string,
               public email: string,
               public imageModel: any,
+              public online: boolean,
               public roles: string[],
               public friends: string[]) {
 
@@ -16,5 +17,6 @@ export class ProfileResponse {
     this.username = username;
     this.roles = roles;
     this.friends = friends;
+    this.online = online;
   }
 }

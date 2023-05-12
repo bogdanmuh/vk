@@ -1,5 +1,5 @@
-import { Injectable } from '@angular/core';
-import {HttpClient, HttpHeaders} from "@angular/common/http";
+import {Injectable} from '@angular/core';
+import {HttpClient} from "@angular/common/http";
 import {TokenStorageService} from "../auth/token-storage.service";
 import {Observable} from "rxjs";
 import {ProfileResponse} from "./profileResponse";

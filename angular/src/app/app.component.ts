@@ -2,7 +2,6 @@ import {Component, OnInit} from '@angular/core';
 
 import {TokenStorageService} from './auth/token-storage.service';
 import {Router} from "@angular/router";
-import {FindComponent} from "./find/find.component";
 
 @Component({
   selector: 'app-root',

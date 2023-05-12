@@ -23,12 +23,24 @@ export class WebSocketService {
     const ws = new SockJS(this.webSocketEndPoint);
     this.stompClient = Stomp.over(ws);
     const that = this;
-    this.stompClient.connect({},
+    this.stompClient.connect({
+      'content-type': 'application/json',
+      'Authorization': `Bearer ${this.tokenStorage.getToken()}`,
+      'username': this.tokenStorage.getUsername()
+    },
       () => {
-        console.log("connected");
+        console.log("connected" + this.topic);
         that.stompClient.subscribe(this.topic, (message: any) => {
+          console.log("Message Recieved from Server :: " + message);
           const notification = JSON.parse(message.body);
-          that.onMessageReceived(notification);
+          switch (notification["event"]) {
+            case 'message':
+              this.addNewMessage(notification);
+              break;
+            default:
+              console.log("default");
+              break;
+          }
         });
         this.stompClient.reconnect_delay = 2000;
       }, this.errorCallBack);
@@ -59,9 +71,8 @@ export class WebSocketService {
     this.stompClient.send("/app/topic", this.tokenStorage.getHttpOptions(), JSON.stringify(message));
   }
 
-  onMessageReceived(message: MessageResponse) {
-    console.log("Message Recieved from Server :: " + message);
+  addNewMessage(message: MessageResponse) {
+    console.log("add message :: " + message.recipient);
     this.chatComponent.addNewMessage(message);
   }
-
 }

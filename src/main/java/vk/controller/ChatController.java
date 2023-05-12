@@ -29,14 +29,10 @@ public class ChatController {
                             chatMessage.getFrom(),
                             chatMessage.getTo(),
                             chatMessage.getDate(),
-                            chatMessage.getMessage()));
+                            chatMessage.getMessage(),
+                            "message"));
     }
 
-    @PostMapping("/chat")
-    public ResponseEntity<?> saveMessage(@RequestBody ChatRequest chatRequest) {
-        messageService.saveMessage(chatRequest);
-        return ResponseEntity.ok("ok");
-    }
     @GetMapping("/chat")
     public ResponseEntity<?> getMessage(@RequestParam String from, @RequestParam String to) {
         return ResponseEntity.ok(messageService.getMessage(from,to));

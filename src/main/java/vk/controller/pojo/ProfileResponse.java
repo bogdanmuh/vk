@@ -9,12 +9,20 @@ public class ProfileResponse {
     private Date date;
     private String username;
     private String email;
+    private boolean isOnline;
     List<String> roles;
     List<String> friends;
     private ImageModel imageModel;
 
-    public ProfileResponse(String firstName, String lastName, Date date,
-                           String username, String email,ImageModel imageModel, List<String> roles , List<String> friends) {
+    public ProfileResponse(String firstName,
+                           String lastName,
+                           Date date,
+                           String username,
+                           String email,
+                           ImageModel imageModel,
+                           List<String> roles,
+                           List<String> friends,
+                           boolean isOnline) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.date = date;
@@ -23,7 +31,12 @@ public class ProfileResponse {
         this.imageModel = imageModel;
         this.roles = roles;
         this.friends = friends;
+        this.isOnline = isOnline;
     }
+
+    public boolean isOnline() {return isOnline;}
+
+    public void setOnline(boolean online) {isOnline = online;}
 
     public List<String> getFriends() {return friends;}
 

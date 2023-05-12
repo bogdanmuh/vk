@@ -11,46 +11,45 @@ const AUTHORITIES_KEY = 'AuthAuthorities';
 export class TokenStorageService {
   private roles: Array<string> = [];
   private isLogIn: boolean = false;
-  constructor() { }
+
 
   signOut() {
-    window.sessionStorage.clear();
+    localStorage.clear();
   }
 
   public saveToken(token: string) {
-    window.sessionStorage.removeItem(TOKEN_KEY);
-    window.sessionStorage.setItem(TOKEN_KEY, token);
+    localStorage.removeItem(TOKEN_KEY);
+    localStorage.setItem(TOKEN_KEY, token);
     this.isLogIn = true;
   }
   public getLogIn() : boolean {
    return this.getToken() != null;
   }
-
   public getToken(): string {
-    return sessionStorage.getItem(TOKEN_KEY)!;
+    return localStorage.getItem(TOKEN_KEY)!;
   }
   public getBearerToken(): string {
-    return "Bearer " + sessionStorage.getItem(TOKEN_KEY)!;
+    return "Bearer " + localStorage.getItem(TOKEN_KEY)!;
   }
 
   public saveUsername(username: string) {
-    window.sessionStorage.removeItem(USERNAME_KEY);
-    window.sessionStorage.setItem(USERNAME_KEY, username);
+    localStorage.removeItem(USERNAME_KEY);
+    localStorage.setItem(USERNAME_KEY, username);
   }
 
   public getUsername(): string {
-    return sessionStorage.getItem(USERNAME_KEY)!;
+    return localStorage.getItem(USERNAME_KEY)!;
   }
 
   public saveAuthorities(authorities: string[]) {
-    window.sessionStorage.removeItem(AUTHORITIES_KEY);
-    window.sessionStorage.setItem(AUTHORITIES_KEY, JSON.stringify(authorities));
+    localStorage.removeItem(AUTHORITIES_KEY);
+    localStorage.setItem(AUTHORITIES_KEY, JSON.stringify(authorities));
   }
 
   public getAuthorities(): string[] {
     this.roles = [];
-    if (sessionStorage.getItem(TOKEN_KEY)) {
-      JSON.parse(sessionStorage.getItem(AUTHORITIES_KEY)!).forEach((authority: string) => {
+    if (localStorage.getItem(TOKEN_KEY)) {
+      JSON.parse(localStorage.getItem(AUTHORITIES_KEY)!).forEach((authority: string) => {
         console.log('put role' + authority);
         this.roles.push(authority);
       });

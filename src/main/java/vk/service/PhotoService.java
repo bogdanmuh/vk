@@ -35,7 +35,7 @@ public class PhotoService {
                     .findFirst();
             if (photoPath.isPresent()) {
                 File file = photoPath.get().toFile();
-                try (FileInputStream fileStream = new FileInputStream(file);) {
+                try (FileInputStream fileStream = new FileInputStream(file)) {
                     return new ImageModel(file.getName(),
                             file.getName().substring(file.getName().indexOf('.')),
                             fileStream.readAllBytes());

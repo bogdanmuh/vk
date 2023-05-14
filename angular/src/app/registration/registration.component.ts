@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {SignupInfo} from "../auth/signup-info";
 import {AuthService} from "../auth/auth.service";
+import {Router} from "@angular/router";
 
 
 @Component({
@@ -16,14 +17,19 @@ export class RegistrationComponent implements OnInit {
   public password: string = "";
   public email: string = "";
 
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService,
+              private router: Router) { }
 
   userRegister() {
     let signupInfo = new SignupInfo(this.firstName, this.lastName,this.date, this.username, this.email,this.password)
     console.log("регистрация нового пользователя");
     this.authService.signUp(signupInfo).subscribe(
-      data=>alert(data + "success"),
-      error=>alert(error+ "unsuccess"))
+      data=>{
+        console.log(data);
+        alert(data + "Сссылка для активации отправлена. Проверьте почту")
+        this.router.navigate(['/login' ])
+      },
+      error=>alert(error))
   }
   ngOnInit(): void {}
 }

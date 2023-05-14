@@ -2,6 +2,7 @@ package vk.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import vk.controller.pojo.AllChatResponse;
 import vk.controller.pojo.ChatMessageResponse;
 import vk.controller.pojo.ChatRequest;
 import vk.controller.pojo.ChatResponse;
@@ -53,6 +54,17 @@ public class MessageService {
                 chatRequest.getFrom(),
                 chatRequest.getTo(),
                 chatRequest.getDate());
+    }
+
+    public List <AllChatResponse> getLastMesasgeForEachRecipient(String username){
+        return messageRepository.findDistinctTop20ByRecipient(username).stream()
+                .map(x -> new AllChatResponse(
+                        x.getSender().getUsername(),
+                        x.getSender().getFirstName(),
+                        x.getSender().getLastName(),
+                        x.getDate(),
+                        x.getMessage()))
+                .collect(Collectors.toList());
     }
 
 

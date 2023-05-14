@@ -16,5 +16,5 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     List<User> findAll();// think!!!!!!!!!
 
-    User findByActivateCode(String code);
+    Optional<User> findByActivateCode(String code);
 }

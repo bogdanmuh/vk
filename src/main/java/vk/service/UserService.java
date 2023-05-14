@@ -1,6 +1,7 @@
 package vk.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import vk.controller.pojo.ActivateMessageResponse;
@@ -62,13 +63,13 @@ public class UserService {
     }
 
     public ActivateMessageResponse activateUser(String code) {
-        User user = userRepository.findByActivateCode(code);
+        Optional<User> user = userRepository.findByActivateCode(code);
 
-        if (user == null) {
+        if (user.isEmpty()) {
             return new ActivateMessageResponse("Activation Code is not found");
         }
-        user.setActivateCode(null);
-        userRepository.save(user);
+        user.get().setActivateCode(null);
+        userRepository.save(user.get());
         return new ActivateMessageResponse("User successfully activated");
 
     }
@@ -80,15 +81,19 @@ public class UserService {
             userRepository.save(user);
         }
     }
-    
 
-    public MessageResponse registerUser(SignupRequest signupRequest) {
+    public ResponseEntity<?> registerUser(SignupRequest signupRequest) {
         roleService.createRole();
         if (userRepository.existsByUsername(signupRequest.getUsername())) {
-            return new MessageResponse("Error: Username is exist");
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse("Error: Username is exist"));
         }
         if (userRepository.existsByEmail(signupRequest.getEmail())) {
-            return new MessageResponse("Error: Email is exist");
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse("Error: Email is exist"));
+
         }
         User user = new User(
                 signupRequest.getUsername(),
@@ -104,9 +109,9 @@ public class UserService {
         userRepository.save(user);
         mailSender.sendValidationMessage(user);
         
-        return new MessageResponse("User CREATED");
+        return ResponseEntity.ok(new MessageResponse("User CREATED"));
     }
-    public void addUser(String sessionId,String username){
+    public void addUser(String sessionId, String username){
         onlineUsers.put(sessionId,username);
     }
     public boolean isOnline(String username){

@@ -2,7 +2,7 @@
 
 Идея pet-проекта. Создать мессенджер для общения (аналог Вконтакте).
 
-Используемые технологии: Spring Boot, Spring MVC, Postgres, Angular
+Используемые технологии: Spring Boot, Spring MVC, Spring Data, Postgres, Angular
 
 В приложение реализованна следующая логика 
 

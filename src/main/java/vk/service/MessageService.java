@@ -1,5 +1,6 @@
 package vk.service;
 
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import vk.controller.pojo.AllChatResponse;
@@ -16,11 +17,11 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@AllArgsConstructor
 public class MessageService {
-    @Autowired
-    private MessageRepository messageRepository;
-    @Autowired
-    private UserService userService;
+
+    private final MessageRepository messageRepository;
+    private final UserService userService;
 
     public void saveMessage(ChatRequest chatRequest) {
         Optional<User> from = userService.getUser(chatRequest.getFrom());
@@ -36,6 +37,7 @@ public class MessageService {
             System.out.println("Невозможно сохранить сообщенение отправитель или получатель  не найдены ");
         }
     }
+
     public ChatMessageResponse getMessage(String from, String to) {
         List<ChatResponse> message = messageRepository.getMessage(from, to).stream()
                 .map(x -> new ChatResponse(
@@ -66,6 +68,5 @@ public class MessageService {
                         x.getMessage()))
                 .collect(Collectors.toList());
     }
-
 
 }

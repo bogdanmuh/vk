@@ -1,6 +1,6 @@
 package vk.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -13,16 +13,19 @@ import java.io.IOException;
 @RequestMapping("/")
 @CrossOrigin(origins = "*", maxAge = 3600)
 @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+@AllArgsConstructor
 public class FindControler {
-    @Autowired
-    private UserService userService;
+
+    private final UserService userService;
 
     @PostMapping("/find")
     public ResponseEntity<?> findInfo(@RequestBody FindRequest findRequest) {
         return ResponseEntity.ok(userService.findAllUsers(findRequest.getText()));
     }
+
     @GetMapping("profile/{userId}")
     public ResponseEntity<?> getUser(@PathVariable String userId) throws IOException {
         return ResponseEntity.ok (userService.getProfileResponse(userId));
     }
+
 }

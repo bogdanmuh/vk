@@ -1,5 +1,6 @@
 package vk.controller;
 
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -13,12 +14,13 @@ import vk.service.MessageService;
 @RestController
 @RequestMapping("/")
 @CrossOrigin(origins = "http://localhost:4200",maxAge = 3600)
+@AllArgsConstructor
 //@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
 public class ChatController {
-    @Autowired
-    private MessageService messageService;
-    @Autowired
-    private SimpMessagingTemplate messagingTemplate;
+
+    private final MessageService messageService;
+    private final SimpMessagingTemplate messagingTemplate;
+
     @MessageMapping("/topic")
     public void processMessage(@Payload ChatRequest chatMessage) {
         messageService.saveMessage(chatMessage);
@@ -42,4 +44,5 @@ public class ChatController {
     public ResponseEntity<?> getMessage(@RequestBody ChatRequest chatRequest) {
         return ResponseEntity.ok(messageService.getMessage(chatRequest));
     }
+
 }

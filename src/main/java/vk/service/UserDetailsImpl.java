@@ -1,6 +1,7 @@
 package vk.service;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -9,16 +10,18 @@ import vk.domain.User;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
-
+@Getter
 public class UserDetailsImpl implements UserDetails {
+
     private static final long serialVersionUID = 1L;
     private Long id ;
-    private String username;
-    private String email;
-    private Collection<? extends GrantedAuthority> authorities;
+    private final String username;
+    private final String email;
+    private final Collection<? extends GrantedAuthority> authorities;
     @JsonIgnore
-    private String password;
-    private String activaCode;
+    private final String password;
+    private final String activaCode;
+
 
     public UserDetailsImpl(String username, String email,String password, Collection<? extends GrantedAuthority> authorities, String activaCode) {
         this.username = username;
@@ -74,14 +77,4 @@ public class UserDetailsImpl implements UserDetails {
         return true;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-    public String getActivaCode() {
-        return activaCode;
-    }
 }

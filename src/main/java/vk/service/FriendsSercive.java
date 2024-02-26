@@ -1,5 +1,6 @@
 package vk.service;
 
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import vk.domain.Friends;
@@ -12,11 +13,11 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@AllArgsConstructor
 public class FriendsSercive {
-    @Autowired
-    FriendsRepository repository;
-    @Autowired
-    UserRepository userRepository;
+
+    private final FriendsRepository repository;
+    private final UserRepository userRepository;
 
     public void add(String user, String friends){
         Optional<User> user1 = userRepository.findByUsername(user);

@@ -24,10 +24,13 @@ public class PhotoService {
 
     @Value("${upload.path}")
     private String uploadPath;
+
     public void savePhoto(MultipartFile file) throws IOException {
         if(file == null) return;
+
         file.transferTo(toOurDirectories(file));
     }
+
     public ImageModel getPhoto (String userId) throws IOException {
         try (Stream<Path> stream = Files.walk(getPathForUsername(userId))) {
             Optional<Path> photoPath  = stream
@@ -44,6 +47,7 @@ public class PhotoService {
         }
         return null;
     }
+
     private Path getPathForUsername(String username) {
         StringBuilder path = new StringBuilder();
         Path currentPath = Path.of(uploadPath);

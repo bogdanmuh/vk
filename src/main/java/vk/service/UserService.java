@@ -1,6 +1,6 @@
 package vk.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -17,21 +17,16 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
+@AllArgsConstructor
 public class UserService {
 
     public static final Map<String,String> onlineUsers = new HashMap<>();//  подумать
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private PhotoService photoService;
-    @Autowired
-    private FriendsSercive friendsService;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-    @Autowired
-    private RoleService roleService;
-    @Autowired
-    private MailSender mailSender;
+    private final UserRepository userRepository;
+    private final PhotoService photoService;
+    private final FriendsSercive friendsService;
+    private final PasswordEncoder passwordEncoder;
+    private final RoleService roleService;
+    private final MailSender mailSender;
 
     public FindResponse findAllUsers(String text) {
         List<String> users = userRepository.findAll().stream()
@@ -47,19 +42,19 @@ public class UserService {
 
     public ProfileResponse getProfileResponse(String userId) throws IOException {
         User user = userRepository.findByUsername(userId).get();
-
         return new ProfileResponse(
                 user.getFirstName(),
                 user.getLastName(),
                 user.getDate(),
                 user.getUsername(),
                 user.getEmail(),
-                photoService.getPhoto(userId),
+                isOnline(user.getUsername()),
                 user.getRoles().stream()
                         .map(data->data.getName().toString())
                         .collect(Collectors.toList()),
                 friendsService.getFriends(userId),
-                isOnline(user.getUsername()));
+                photoService.getPhoto(userId)
+               );
     }
 
     public ActivateMessageResponse activateUser(String code) {
@@ -71,8 +66,8 @@ public class UserService {
         user.get().setActivateCode(null);
         userRepository.save(user.get());
         return new ActivateMessageResponse("User successfully activated");
-
     }
+
     public void editLastOnline(String sessionId) {
         Optional<User> option= userRepository.findByUsername(removeOnlineUser(sessionId));
         if (option.isPresent()){
@@ -103,20 +98,23 @@ public class UserService {
                 UUID.randomUUID().toString(),
                 signupRequest.getEmail(),
                 passwordEncoder.encode(signupRequest.getPassword()),
-                roleService.validationRole(signupRequest.getRoles()),
-                signupRequest.getDate());
+                signupRequest.getDate(),
+                roleService.validationRole(signupRequest.getRoles()));
 
         userRepository.save(user);
         mailSender.sendValidationMessage(user);
         
         return ResponseEntity.ok(new MessageResponse("User CREATED"));
     }
+
     public void addUser(String sessionId, String username){
         onlineUsers.put(sessionId,username);
     }
+
     public boolean isOnline(String username){
         return onlineUsers.containsValue(username);
     }
+
     public String removeOnlineUser(String sessionId){
         return onlineUsers.remove(sessionId);
     }

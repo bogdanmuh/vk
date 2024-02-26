@@ -10,10 +10,13 @@ import vk.domain.User;
 
 @Service
 public class MailSender {
-    @Autowired
-    private JavaMailSender mailSender;
+    private final JavaMailSender mailSender;
     @Value("${spring.mail.username}")
     private String username;
+
+    public MailSender(JavaMailSender mailSender) {
+        this.mailSender = mailSender;
+    }
 
     private void send (String emailTo, String subject, String message) {
         SimpleMailMessage mailMessage = new SimpleMailMessage();
@@ -24,8 +27,9 @@ public class MailSender {
         mailSender.send(mailMessage);
 
     }
+
     public void sendValidationMessage(User user){
-        if (!StringUtils.isEmpty(user.getEmail())) {
+        if (!user.getEmail().isEmpty()) {
             String message = String.format(
                     "Hello, %s! \n" +
                             " Please, visit next link: http://localhost:4200/activate/%s",

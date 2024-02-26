@@ -1,10 +1,16 @@
 package vk.domain;
 
+import lombok.*;
+
 import javax.persistence.*;
 
+
+@Data
 @Entity
+@NoArgsConstructor
 @Table(name = "friends")
 public class Friends {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -22,24 +28,6 @@ public class Friends {
         this.friend_two = friend_two;
     }
 
-    public Friends() {}
-
-    public User getFriend_one() {
-        return friend_one;
-    }
-
-    public void setFriend_one(User friend_one) {
-        this.friend_one = friend_one;
-    }
-
-    public User getFriend_two() {
-        return friend_two;
-    }
-
-    public void setFriend_two(User friend_two) {
-        this.friend_two = friend_two;
-    }
-
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
@@ -52,7 +40,6 @@ public class Friends {
             return ((Friends) obj).getFriend_one().equals(getFriend_two()) &&
                     ((Friends) obj).getFriend_two().equals(getFriend_one());
         }
-
         return false;
     }
 

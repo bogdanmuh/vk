@@ -1,5 +1,7 @@
 package vk.controller;
 
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -11,9 +13,10 @@ import vk.repos.UserRepository;
 @RequestMapping("/")
 @CrossOrigin(origins = "*", maxAge = 3600)
 @PreAuthorize("hasRole('ADMIN')")
+@AllArgsConstructor
 public class GreetingController {
-    @Autowired
-    private UserRepository userRepository;
+
+    private final UserRepository userRepository;
 
     @PostMapping("/")
     public ResponseEntity<User> addNewUser(@RequestBody User user) {
@@ -38,8 +41,8 @@ public class GreetingController {
     }
 
     @GetMapping("/admin")
-
     public String adminAccess() {
         return "admin API";
     }
+
 }

@@ -1,6 +1,6 @@
 package vk.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import vk.domain.ERole;
 import vk.domain.Role;
@@ -8,13 +8,15 @@ import vk.repos.RoleRepository;
 
 import java.util.HashSet;
 import java.util.Set;
+
 @Service
+@AllArgsConstructor
 public class RoleService {
-    @Autowired
-    RoleRepository roleRepository;
-    public RoleService(){}
+
+    private final RoleRepository roleRepository;
+
     //переделать
-    public Set<Role> validationRole(Set<String> reqRoles){
+    public Set<Role> validationRole(Set<String> reqRoles) {
         Set<Role> roles = new HashSet<>();
         if (reqRoles == null) {
             Role userRole = roleRepository
@@ -50,14 +52,14 @@ public class RoleService {
         return roles;
     }
 
-    public void createRole(){
-        if(!roleRepository.existsByName(ERole.ROLE_USER)){/// миграция
+    public void createRole() {
+        if (!roleRepository.existsByName(ERole.ROLE_USER)) {/// миграция
             roleRepository.save(new Role(ERole.ROLE_USER));
         }
-        if(!roleRepository.existsByName(ERole.ROLE_ADMIN)){
+        if (!roleRepository.existsByName(ERole.ROLE_ADMIN)) {
             roleRepository.save(new Role(ERole.ROLE_ADMIN));
         }
-        if(!roleRepository.existsByName(ERole.ROLE_MODERATOR)) {
+        if (!roleRepository.existsByName(ERole.ROLE_MODERATOR)) {
             roleRepository.save(new Role(ERole.ROLE_MODERATOR));
         }
     }

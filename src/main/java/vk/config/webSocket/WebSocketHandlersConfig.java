@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class WebSocketHandlersConfig {
+
     @Bean
     public StompConnectEvent webSocketConnectHandler() {
         return new StompConnectEvent();
@@ -14,4 +15,5 @@ public class WebSocketHandlersConfig {
     public StompDisconnectEvent webSocketDisconnectHandler() {
         return new StompDisconnectEvent();
     }
+
 }

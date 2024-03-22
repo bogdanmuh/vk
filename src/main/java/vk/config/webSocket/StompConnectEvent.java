@@ -7,8 +7,10 @@ import org.springframework.web.socket.messaging.SessionConnectEvent;
 import vk.service.UserService;
 
 public class StompConnectEvent implements ApplicationListener<SessionConnectEvent> {
+
     @Autowired
     private UserService userService;
+
     @Override
     public void onApplicationEvent(SessionConnectEvent event) {
         StompHeaderAccessor sha = StompHeaderAccessor.wrap(event.getMessage());

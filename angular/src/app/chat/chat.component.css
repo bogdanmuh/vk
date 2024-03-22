@@ -183,7 +183,13 @@ body {
 
 .chat .messages-chat .text {
   margin: 0 35px;
-  background-color: #f6f6f6;
+  background-color: #06d755;
+  padding: 15px;
+  border-radius: 12px;
+}
+.chat .messages-chat .text2 {
+  margin: 0 35px;
+  background-color: #447979;
   padding: 15px;
   border-radius: 12px;
 }

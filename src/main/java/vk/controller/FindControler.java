@@ -19,8 +19,8 @@ public class FindControler {
     private final UserService userService;
 
     @PostMapping("/find")
-    public ResponseEntity<?> findInfo(@RequestBody FindRequest findRequest) {
-        return ResponseEntity.ok(userService.findAllUsers(findRequest.getText()));
+    public ResponseEntity<?> findInfo(@RequestBody FindRequest text) {
+        return ResponseEntity.ok(userService.findAllUsers(text.getText()));
     }
 
     @GetMapping("profile/{userId}")

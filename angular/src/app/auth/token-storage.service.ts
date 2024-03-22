@@ -3,6 +3,7 @@ import {HttpHeaders} from "@angular/common/http";
 
 const TOKEN_KEY = 'AuthToken';
 const USERNAME_KEY = 'AuthUsername';
+const ID_KEY = 'AuthId';
 const AUTHORITIES_KEY = 'AuthAuthorities';
 
 @Injectable({
@@ -30,6 +31,15 @@ export class TokenStorageService {
   }
   public getBearerToken(): string {
     return "Bearer " + localStorage.getItem(TOKEN_KEY)!;
+  }
+
+  public saveId(id: number) {
+    localStorage.removeItem(ID_KEY);
+    localStorage.setItem(ID_KEY, id.toString());
+  }
+
+  public getId() {
+    return localStorage.getItem(ID_KEY)!;
   }
 
   public saveUsername(username: string) {

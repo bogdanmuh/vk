@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {ProfileService} from "./profile.service";
 import {TokenStorageService} from "../auth/token-storage.service";
 import {AddFriendsRequest} from "./addFriendsRequest";
@@ -30,7 +30,8 @@ export class ProfileComponent implements OnInit {
 
   constructor(private actiateRoute: ActivatedRoute,
               private profileService: ProfileService,
-              private storageService : TokenStorageService) {
+              private storageService : TokenStorageService,
+              private router: Router) {
     this.id = actiateRoute.snapshot.params['username'];
     this.isCurrentUser = this.a(this.id);
   }
@@ -98,6 +99,16 @@ export class ProfileComponent implements OnInit {
         }
       );
   }
+
+  sendMessage() {
+    this.router.navigate(['/chat/-1 '] ,
+      { queryParams: {
+          usernameCompains: this.username ,
+          firstNameCompains: this.firstName ,
+          lastNameCompains: this.lastName}
+      });
+  }
+
 
 
 

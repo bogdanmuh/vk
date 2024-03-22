@@ -3,3 +3,4 @@ export class Message {
     this.message = message;
   }
 }
+//Todo к удалению

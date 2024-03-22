@@ -7,10 +7,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ImageModel {
+public class NewChatRequest {
+    private String [] participantsUsername ;
 
     private String name;
-    private String type;
-    private byte[] picByte;
-
 }

@@ -22,7 +22,7 @@ export class FindComponent implements OnInit {
               private findServices: FindSericeService) { }
 
   findUsers() {
-    console.log("find users"+this.f.text,this.tokenStorage.getToken());
+    console.log("find users " + this.f.text, this.tokenStorage.getToken());
     let find = new FindRequest(this.f.text);
     this.findServices.findInfo(find, this.tokenStorage.getHttpOptions()).subscribe( data => {
       console.log(data);

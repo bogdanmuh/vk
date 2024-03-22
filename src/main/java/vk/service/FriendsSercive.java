@@ -30,7 +30,7 @@ public class FriendsSercive {
 
     public List<String> getFriends(String user){
         List<Friends> friends =  repository.getFriends(user);
-        return  friends.stream()
+        return friends.stream()
                 .map(x->{
                         if(!user.equals(x.getFriend_one().getUsername())) return  x.getFriend_one().getUsername();
                         if(!user.equals(x.getFriend_two().getUsername())) return  x.getFriend_two().getUsername();

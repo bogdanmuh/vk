@@ -14,7 +14,7 @@ export class AllChatService {
 
   getCompanions(): Observable<User[]> {
     const params = new HttpParams()
-      .set('to', this.tokenStorage.getUsername())
+      .set('user_id', this.tokenStorage.getId())
       .set('content-type','application/json')
       .set('Authorization',`${this.tokenStorage.getBearerToken()}`);
 

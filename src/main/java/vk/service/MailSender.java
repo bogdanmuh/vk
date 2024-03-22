@@ -10,13 +10,10 @@ import vk.domain.User;
 
 @Service
 public class MailSender {
-    private final JavaMailSender mailSender;
+    @Autowired
+    private JavaMailSender mailSender;
     @Value("${spring.mail.username}")
     private String username;
-
-    public MailSender(JavaMailSender mailSender) {
-        this.mailSender = mailSender;
-    }
 
     private void send (String emailTo, String subject, String message) {
         SimpleMailMessage mailMessage = new SimpleMailMessage();

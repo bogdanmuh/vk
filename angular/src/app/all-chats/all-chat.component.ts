@@ -11,8 +11,6 @@ import {TokenStorageService} from "../auth/token-storage.service";
 export class AllChatComponent  implements OnInit {
   public message: string = "";
   public users: User[] = [];
-  public currentDate: Date = new Date();
-
   isLoggedIn: boolean = this.storageService.getLogIn();
 
   constructor(private allChatService : AllChatService,
@@ -31,7 +29,6 @@ export class AllChatComponent  implements OnInit {
 
 
   diffGetTime(date: any): Date {
-
     let d = new Date(Date.now() - date);
     console.log(new Date(Date.now() - date.getTime()))
     return d;

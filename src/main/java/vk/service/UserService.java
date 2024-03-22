@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import vk.controller.pojo.ActivateMessageResponse;
 import vk.controller.pojo.FindResponse;
 import vk.controller.pojo.ProfileResponse;
+import vk.domain.Chats;
 import vk.domain.User;
 import vk.pojo.MessageResponse;
 import vk.pojo.SignupRequest;
@@ -14,19 +15,33 @@ import vk.repos.UserRepository;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
 public class UserService {
 
-    public static final Map<String,String> onlineUsers = new HashMap<>();//  подумать
+    private static final Map<String,String> onlineUsers = new ConcurrentHashMap<>();//  подумать
     private final UserRepository userRepository;
     private final PhotoService photoService;
     private final FriendsSercive friendsService;
     private final PasswordEncoder passwordEncoder;
     private final RoleService roleService;
     private final MailSender mailSender;
+
+    public Set<User> getUsers(String[] usernames) {
+        Set<User> users = new HashSet<>();
+        for (String username : usernames) {
+            Optional<User> userData = getUser(username);
+            if (userData.isPresent()){
+                users.add(userData.get());
+            } else {
+                System.out.println("user с id -" + username + " не найден");
+            }
+        }
+        return users;
+    }
 
     public FindResponse findAllUsers(String text) {
         List<String> users = userRepository.findAll().stream()
@@ -40,21 +55,29 @@ public class UserService {
         return userRepository.findByUsername(userId);
     }
 
+    public Optional<User> getUser(Long id) {
+        return userRepository.findById(id);
+    }
+
     public ProfileResponse getProfileResponse(String userId) throws IOException {
-        User user = userRepository.findByUsername(userId).get();
-        return new ProfileResponse(
-                user.getFirstName(),
-                user.getLastName(),
-                user.getDate(),
-                user.getUsername(),
-                user.getEmail(),
-                isOnline(user.getUsername()),
-                user.getRoles().stream()
-                        .map(data->data.getName().toString())
-                        .collect(Collectors.toList()),
-                friendsService.getFriends(userId),
-                photoService.getPhoto(userId)
-               );
+        Optional<User> userData = userRepository.findByUsername(userId);
+        if (userData.isEmpty()){
+            System.out.println("user с id -" + userId + " не найден");
+        } else {
+            return new ProfileResponse(
+                    userData.get().getFirstName(),
+                    userData.get().getLastName(),
+                    userData.get().getDate(),
+                    userData.get().getUsername(),
+                    userData.get().getEmail(),
+                    isOnline(userData.get().getUsername()),
+                    userData.get().getRoles().stream()
+                            .map(data->data.getName().toString())
+                            .collect(Collectors.toList()),
+                    friendsService.getFriends(userId),
+                    photoService.getPhoto(userId)
+            );
+        } return null;// throw Exception
     }
 
     public ActivateMessageResponse activateUser(String code) {
@@ -95,7 +118,7 @@ public class UserService {
                 signupRequest.getFirstName(),
                 signupRequest.getLastName(),
                 signupRequest.getDate(),
-                UUID.randomUUID().toString(),
+                null,//TODO временной решение, разобраться почему перестал работать spring mail
                 signupRequest.getEmail(),
                 passwordEncoder.encode(signupRequest.getPassword()),
                 signupRequest.getDate(),

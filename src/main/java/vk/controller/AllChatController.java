@@ -18,8 +18,8 @@ public class AllChatController {
     private final MessageService messageService;
 
     @GetMapping("/allChat")
-    public ResponseEntity<?> getCompanions(@RequestParam String to) {
-        return ResponseEntity.ok(messageService.getLastMesasgeForEachRecipient(to));
+    public ResponseEntity<?> getCompanions(@RequestParam Long user_id) {
+        return ResponseEntity.ok(messageService.getLastMesasgeFromChats(user_id));
     }
 
 }

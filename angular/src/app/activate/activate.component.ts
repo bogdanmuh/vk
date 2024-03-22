@@ -1,7 +1,6 @@
 import {Component} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
-import {Message} from "./Message";
 
 @Component({
   selector: 'app-activate',
@@ -19,10 +18,10 @@ export class ActivateComponent {
         'content-type': 'application/json'
       }),
     };
-    this.http.get <Message>(
-      'http://localhost:8080/activate/' + activateRoute.snapshot.params['code'],
-      httpOptions).subscribe(data => {
-      this.message = data.message;
+    this.http
+      .get('http://localhost:8080/activate/' + activateRoute.snapshot.params['code'], httpOptions)
+      .subscribe((data: any)  => {
+      this.message = data["message"];
     })
 
   }

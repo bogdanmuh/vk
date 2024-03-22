@@ -2,11 +2,13 @@
 export class  MessageRequest {
   public date: Date = new Date();
 
-  constructor(public from: string,
-              public to: string,
-              public message: string) {
-    this.from = from;
-    this.to = to;
+  constructor(public sender: string,
+              public recipient: string,
+              public message: string,
+              public chatId: number) {
+    this.sender = sender;
+    this.recipient = recipient;
     this.message = message;
+    this.chatId = chatId;
   }
 }

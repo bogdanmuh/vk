@@ -32,4 +32,8 @@
     <p>Don't have an account?</p>
     <a href="signup" class="btn btn-success">Sign Up</a>
   </div>
+
+  <div *ngIf="isLoginFailed">
+    error message: {{errorMessage}}
+  </div>
 </ng-template>

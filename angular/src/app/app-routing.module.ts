@@ -38,7 +38,7 @@ const routes: Routes = [
     component: ActivateComponent
   },
   {
-    path: 'chat/:chat_id',
+    path: 'chat/:user_id',
     component: ChatComponent
   },
   {

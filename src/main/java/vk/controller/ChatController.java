@@ -1,12 +1,14 @@
 package vk.controller;
 
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
+import vk.controller.exception.ChatNotFoundException;
+import vk.controller.exception.UserNofFoundException;
+import vk.controller.pojo.ChatMessageResponse;
 import vk.controller.pojo.ChatRequest;
 import vk.controller.pojo.ChatResponse;
 import vk.controller.pojo.NewChatRequest;
@@ -28,7 +30,7 @@ public class ChatController {
     private final ChatsService chatsService;
 
     @MessageMapping("/topic")
-    public void processMessage(@Payload ChatRequest chatMessage) {
+    public void processMessage(@Payload ChatRequest chatMessage) throws UserNofFoundException, ChatNotFoundException {
         messageService.saveMessage(chatMessage);
         messagingTemplate.convertAndSendToUser(
                 chatMessage.getRecipient(),
@@ -42,18 +44,18 @@ public class ChatController {
     }
 
     @GetMapping(value = "/chat", params = { "id" })
-    public ResponseEntity<?> getMessage(@RequestParam Long id) {
-        return ResponseEntity.ok(messageService.getMessage(id));
+    public ChatMessageResponse getMessage(@RequestParam Long id) {
+        return messageService.getMessage(id);
     }
 
     @GetMapping(value = "/chat", params = { "usernames" })
-    public ResponseEntity<?> getMessage(@RequestParam String [] usernames) {
-        return ResponseEntity.ok(messageService.getMessage(usernames));
+    public ChatMessageResponse getMessage(@RequestParam String [] usernames) throws UserNofFoundException {
+        return messageService.getMessage(usernames);
     }
 
     @PostMapping("/chat/new")
-    public ResponseEntity<?> newChat(@RequestBody NewChatRequest newChatRequest) {
-        return ResponseEntity.ok(chatsService.save(newChatRequest));
+    public Chats newChat(@RequestBody NewChatRequest newChatRequest) throws UserNofFoundException {
+        return chatsService.save(newChatRequest);
     }
 
     @PostMapping("/chat/update")

@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {SignupInfo} from "../auth/signup-info";
-import {AuthService} from "../auth/auth.service";
+import {AuthService} from "../services/auth.service";
 import {Router} from "@angular/router";
 
 
@@ -24,7 +24,7 @@ export class RegistrationComponent implements OnInit {
     let signupInfo = new SignupInfo(this.firstName, this.lastName,this.date, this.username, this.email,this.password)
     console.log("регистрация нового пользователя");
     this.authService.signUp(signupInfo).subscribe(
-      data=>{
+      data => {
         console.log(data);
         alert(data + "Сссылка для активации отправлена. Проверьте почту")
         this.router.navigate(['/login' ])

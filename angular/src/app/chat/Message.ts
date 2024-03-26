@@ -1,4 +1,4 @@
-export class  MessageResponse {
+export class  Message {
   public event: string = "";
   constructor(public message: string,
               public from: string,

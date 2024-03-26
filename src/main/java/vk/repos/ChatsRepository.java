@@ -3,7 +3,6 @@ package vk.repos;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import vk.domain.Chats;
-import vk.domain.dto.ChatDto;
 
 import java.util.List;
 import java.util.Optional;

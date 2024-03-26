@@ -1,19 +1,19 @@
 package vk.domain;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import vk.controller.pojo.AllChatResponse;
 
 import javax.persistence.*;
 import java.util.Date;
 
-@Data
+@Getter
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "messages")
-@NamedNativeQuery(name = "Message.getLastMesasgeFromChats",
+@NamedNativeQuery(name = "Message.getLastMessageFromChats",
        query = "select u.username as us, u.first_name as fn, u.last_name as ln, maxdate , a.message as mes, a.chat_id as cid " +
                "from users u " +
                "INNER join " +

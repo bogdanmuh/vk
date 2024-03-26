@@ -1,4 +1,4 @@
-package vk.security.jwt;
+package vk.config.security.jwt;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;

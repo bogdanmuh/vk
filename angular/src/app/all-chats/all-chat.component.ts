@@ -12,6 +12,8 @@ export class AllChatComponent  implements OnInit {
   public message: string = "";
   public users: User[] = [];
   isLoggedIn: boolean = this.storageService.getLogIn();
+  isError: boolean = false;
+  errorMessage: string = "";
 
   constructor(private allChatService : AllChatService,
               private storageService : TokenStorageService) { }
@@ -21,10 +23,15 @@ export class AllChatComponent  implements OnInit {
   }
   getCompanions(): void {
     this.allChatService.getCompanions().subscribe(
-      data => {
-        this.users = data;
-        alert("success")
-      },error=>alert("unsuccessful"))
+      response => {
+        console.log(response)
+        this.users = response["data"];
+      },response => {
+        console.log(response);
+        alert(response.error["message"]);
+        this.isError = true;
+        this.errorMessage = response.error["message"];
+      })
   }
 
 

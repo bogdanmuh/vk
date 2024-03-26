@@ -12,9 +12,9 @@ public class AllChatResponse {
     private Date date;
     private String message;
     private Long chat_id;
-    private String usernameCompains;
-    private String firstNameCompains;
-    private String lastNameCompains;
+    private String usernameCompanion;
+    private String firstNameCompanion;
+    private String lastNameCompanion;
 
     public AllChatResponse(String username, String firstName, String lastName, Date date, String message, Long chat_id) {
         this.username = username;

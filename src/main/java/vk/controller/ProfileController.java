@@ -1,16 +1,16 @@
 package vk.controller;
 
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.ResponseEntity.BodyBuilder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import vk.controller.exception.UserNofFoundException;
 import vk.controller.pojo.FriendsRequest;
-import vk.service.FriendsSercive;
+import vk.service.FriendsService;
 import vk.service.PhotoService;
+import vk.service.UserService;
 
 import java.io.IOException;
 
@@ -23,17 +23,23 @@ import java.io.IOException;
 public class ProfileController {
 
     private final PhotoService photoService;
-    private final FriendsSercive friendsSercive;
+    private final FriendsService friendsService;
+    private final UserService userService;
+
+    @GetMapping("/{userId}")
+    public ResponseEntity<?> getUser(@PathVariable String userId) throws IOException, UserNofFoundException {
+        return ResponseEntity.ok (userService.getProfileResponse(userId));
+    }
 
     @PostMapping("/upload")
-    public BodyBuilder uplaodImage(@RequestParam("imageFile") MultipartFile file) throws IOException {
+    public BodyBuilder uploadImage(@RequestParam("imageFile") MultipartFile file) throws IOException {
         photoService.savePhoto(file);
         return ResponseEntity.status(HttpStatus.OK);
     }
 
     @PostMapping("/friend")
-    public BodyBuilder addFreinds(@RequestBody FriendsRequest request) {
-        friendsSercive.add(request.getUsername(),request.getFriend());
+    public BodyBuilder addFriends(@RequestBody FriendsRequest request) throws UserNofFoundException {
+        friendsService.add(request.getUsername(),request.getFriend());
         return ResponseEntity.status(HttpStatus.OK);
     }
 

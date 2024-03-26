@@ -18,38 +18,45 @@ export class ProfileComponent implements OnInit {
   date: any
   roles: string[] = []
   friends: string[] = []
-
   selectedFile: File | undefined;
   retrievedImage: any;
   base64Data: any;
-  retrieveResonse: any;
+  retrieveResponse: any;
   message: string = "";
+  errorMessage: string = "";
+
   imageName: any;
   public isLoggedIn: boolean = this.storageService.getLogIn();
+  public isError: boolean = false;
+
   isCurrentUser: boolean;
 
-  constructor(private actiateRoute: ActivatedRoute,
+  constructor(private activateRoute: ActivatedRoute,
               private profileService: ProfileService,
               private storageService : TokenStorageService,
               private router: Router) {
-    this.id = actiateRoute.snapshot.params['username'];
+    this.id = activateRoute.snapshot.params['username'];
     this.isCurrentUser = this.a(this.id);
   }
 
   ngOnInit(): void {
-    this.profileService.getUser(this.id).subscribe(data => {
-
-      this.username = data.username;
-      this.roles = data.roles;
-      this.firstName = data.firstName;
-      this.lastName = data.lastName;
-      this.date = data.date;
-      this.friends = data.friends;
-      this.retrieveResonse = data.imageModel;
-      this.isOnline = data.online;
-      this.base64Data = this.retrieveResonse.picByte;
+    this.profileService.getUser(this.id).subscribe(response => {
+      this.username = response.data.username;
+      this.roles = response.data.roles;
+      this.firstName = response.data.firstName;
+      this.lastName = response.data.lastName;
+      this.date = response.data.date;
+      this.friends = response.data.friends;
+      this.retrieveResponse = response.data.imageModel;
+      this.isOnline = response.data.online;
+      this.base64Data = this.retrieveResponse.picByte;
       this.retrievedImage = 'data:image/jpeg;base64,' + this.base64Data;
-      alert("success")
+
+      },response => {
+        console.log(response);
+        alert(response.error["message"]);
+        this.isError = true;
+        this.errorMessage = response.error["message"];
       }
     )
   }
@@ -78,34 +85,34 @@ export class ProfileComponent implements OnInit {
     this.profileService.getImage()
       .subscribe(
         res => {
-          this.retrieveResonse = res;
-          this.base64Data = this.retrieveResonse.picByte;
+          this.retrieveResponse = res;
+          this.base64Data = this.retrieveResponse.picByte;
           this.retrievedImage = 'data:image/jpeg;base64,' + this.base64Data;
         }
       );
   }
 
   a(username: String) : boolean {
-    return this.storageService.getUsername()==username;
+    return this.storageService.getUsername() == username;
   }
   addFriends() {
     let addFriendsRequest = new AddFriendsRequest(this.storageService.getUsername(), this.username);
     this.profileService.addFriend(addFriendsRequest)
       .subscribe(
         res => {
-          this.retrieveResonse = res;
-          this.base64Data = this.retrieveResonse.picByte;
+          this.retrieveResponse = res;
+          this.base64Data = this.retrieveResponse.picByte;
           this.retrievedImage = 'data:image/jpeg;base64,' + this.base64Data;
         }
       );
   }
 
   sendMessage() {
-    this.router.navigate(['/chat/-1 '] ,
+    this.router.navigate(['/chat/' + this.username] ,
       { queryParams: {
-          usernameCompains: this.username ,
-          firstNameCompains: this.firstName ,
-          lastNameCompains: this.lastName}
+          chatId: -1 ,
+          firstNameCompanion: this.firstName ,
+          lastNameCompanion: this.lastName}
       });
   }
 

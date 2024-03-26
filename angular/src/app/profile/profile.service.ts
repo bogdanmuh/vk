@@ -1,9 +1,10 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {TokenStorageService} from "../auth/token-storage.service";
-import {Observable} from "rxjs";
+import { Observable} from "rxjs";
 import {ProfileResponse} from "./profileResponse";
 import {AddFriendsRequest} from "./addFriendsRequest";
+import {StandardResponse} from "../StandartResponse";
 
 @Injectable({
   providedIn: 'root'
@@ -18,8 +19,8 @@ export class ProfileService {
   constructor(private http: HttpClient,
               private tokenStorage: TokenStorageService) {}
 
-  getUser(userId:string): Observable<ProfileResponse> {
-    return this.http.get<ProfileResponse>(this.findPersonUrl + userId,  this.tokenStorage.getHttpOptions());
+  getUser(userId:string): Observable<StandardResponse<ProfileResponse>> {
+    return this.http.get<StandardResponse<ProfileResponse>>(this.findPersonUrl + userId,  this.tokenStorage.getHttpOptions())
   }
 
   loadImage(selectedFile: File) {

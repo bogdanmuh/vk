@@ -1,16 +1,17 @@
 package vk.service;
 
 import lombok.AllArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import vk.controller.exception.EmailIsExistException;
+import vk.controller.exception.UserNofFoundException;
+import vk.controller.exception.UsernameIsExistException;
 import vk.controller.pojo.ActivateMessageResponse;
 import vk.controller.pojo.FindResponse;
 import vk.controller.pojo.ProfileResponse;
-import vk.domain.Chats;
 import vk.domain.User;
-import vk.pojo.MessageResponse;
-import vk.pojo.SignupRequest;
+import vk.controller.pojo.MessageResponse;
+import vk.controller.pojo.SignupRequest;
 import vk.repos.UserRepository;
 
 import java.io.IOException;
@@ -22,23 +23,19 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class UserService {
 
-    private static final Map<String,String> onlineUsers = new ConcurrentHashMap<>();//  подумать
+    private static final Map<String,String> onlineUsers = new ConcurrentHashMap<>();//TODO  подумать
     private final UserRepository userRepository;
     private final PhotoService photoService;
-    private final FriendsSercive friendsService;
+    private final FriendsService friendsService;
     private final PasswordEncoder passwordEncoder;
     private final RoleService roleService;
     private final MailSender mailSender;
 
-    public Set<User> getUsers(String[] usernames) {
+    public Set<User> getUsers(String[] usernames) throws UserNofFoundException  {
         Set<User> users = new HashSet<>();
         for (String username : usernames) {
-            Optional<User> userData = getUser(username);
-            if (userData.isPresent()){
-                users.add(userData.get());
-            } else {
-                System.out.println("user с id -" + username + " не найден");
-            }
+            User user = getUser(username);
+            users.add(user);
         }
         return users;
     }
@@ -51,33 +48,26 @@ public class UserService {
         return new FindResponse(users);
     }
 
-    public Optional<User> getUser(String userId) {
-        return userRepository.findByUsername(userId);
+    public User getUser(String username) throws UserNofFoundException {
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new UserNofFoundException (
+                    String.format(UserNofFoundException.UserWithUsernameNotFound, username)));
     }
 
-    public Optional<User> getUser(Long id) {
-        return userRepository.findById(id);
+    public User getUser(Long id) throws UserNofFoundException {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new UserNofFoundException (
+                        String.format(UserNofFoundException.UserWithIdNotFound, id)));
     }
 
-    public ProfileResponse getProfileResponse(String userId) throws IOException {
-        Optional<User> userData = userRepository.findByUsername(userId);
-        if (userData.isEmpty()){
-            System.out.println("user с id -" + userId + " не найден");
-        } else {
-            return new ProfileResponse(
-                    userData.get().getFirstName(),
-                    userData.get().getLastName(),
-                    userData.get().getDate(),
-                    userData.get().getUsername(),
-                    userData.get().getEmail(),
-                    isOnline(userData.get().getUsername()),
-                    userData.get().getRoles().stream()
-                            .map(data->data.getName().toString())
-                            .collect(Collectors.toList()),
-                    friendsService.getFriends(userId),
-                    photoService.getPhoto(userId)
-            );
-        } return null;// throw Exception
+    public ProfileResponse getProfileResponse(String userId) throws IOException, UserNofFoundException {
+        User user = getUser(userId);
+        return new ProfileResponse(
+                getUser(userId),
+                isOnline(user.getUsername()),
+                friendsService.getFriends(userId),
+                photoService.getPhoto(userId)
+        );
     }
 
     public ActivateMessageResponse activateUser(String code) {
@@ -100,19 +90,15 @@ public class UserService {
         }
     }
 
-    public ResponseEntity<?> registerUser(SignupRequest signupRequest) {
+    public MessageResponse registerUser(SignupRequest signupRequest) throws UsernameIsExistException, EmailIsExistException {
         roleService.createRole();
-        if (userRepository.existsByUsername(signupRequest.getUsername())) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(new MessageResponse("Error: Username is exist"));
-        }
-        if (userRepository.existsByEmail(signupRequest.getEmail())) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(new MessageResponse("Error: Email is exist"));
+        if (userRepository.existsByUsername(signupRequest.getUsername()))
+            throw new UsernameIsExistException(
+                    String.format(UsernameIsExistException.usernameIsExist, signupRequest.getUsername()));
+        if (userRepository.existsByEmail(signupRequest.getEmail()))
+            throw new EmailIsExistException(
+                    String.format(EmailIsExistException.emailIsExist,signupRequest.getEmail()));
 
-        }
         User user = new User(
                 signupRequest.getUsername(),
                 signupRequest.getFirstName(),
@@ -126,8 +112,7 @@ public class UserService {
 
         userRepository.save(user);
         mailSender.sendValidationMessage(user);
-        
-        return ResponseEntity.ok(new MessageResponse("User CREATED"));
+        return new MessageResponse("User CREATED");
     }
 
     public void addUser(String sessionId, String username){

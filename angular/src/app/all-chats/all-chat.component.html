@@ -2,56 +2,63 @@
 <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
 <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 <app-side-bar></app-side-bar>
-<div *ngIf="isLoggedIn; else loggedOut">
-  <div class="container">
-    <div class="chats">
+<div *ngIf="isError; else b">
+  error message: {{errorMessage}}
+</div>
+<ng-template #b>
+  <div *ngIf="isLoggedIn; else loggedOut">
+    <div class="container">
+      <div class="chats">
 
-      <!--header-->
-      <div class="header">
-        <div class="userImg">
-          <img src="" class="cover">
+        <!--header-->
+        <div class="header">
+          <div class="userImg">
+            <img src="" class="cover">
+          </div>
+          <ul class="nav_icons">
+            <li>
+              <ion-icon name="scan-circle-outline"></ion-icon>
+            </li>
+            <li>
+              <ion-icon name="chatterbox"></ion-icon>
+            </li>
+            <li>
+
+              <ion-icon name="cog-outline"></ion-icon>
+
+            </li>
+          </ul>
         </div>
-        <ul class="nav_icons">
-          <li>
-            <ion-icon name="scan-circle-outline"></ion-icon>
-          </li>
-          <li>
-            <ion-icon name="chatterbox"></ion-icon>
-          </li>
-          <li>
-            <ion-icon name="ellipsis-vertical"></ion-icon>
-          </li>
-        </ul>
-      </div>
 
-      <!--search-->
-      <div class="search_chat">
-        <div>
-          <input type="text" placeholder="Search..."/>
-          <ion-icon name="search-outline"></ion-icon>
+        <!--search-->
+        <div class="search_chat">
+          <div>
+            <input type="text" placeholder="Search..."/>
+            <ion-icon name="search-outline"></ion-icon>
+          </div>
         </div>
-      </div>
 
-      <!--chat list-->
-      <div *ngFor=" let user of users">
-        <div class="chatList">
-          <div class="block active" routerLink="/chat/{{user.chat_id}}" [queryParams]="{
-                        usernameCompains : user.usernameCompains,
-                        firstNameCompains : user.firstNameCompains,
-                        lastNameCompains : user.lastNameCompains
-                    }" routerLinkActive="active">
-            <div class="img-bx">
-              <img src="" class="cover">
-            </div>
-            <div class="details">
-              <div class="listHead">
-                <h4 routerLink="/profile/{{user.usernameCompains}}"
-                    routerLinkActive="active">{{user.firstNameCompains}} {{user.lastNameCompains}} </h4>
-                <div class="time">{{ user.date | date:'dd-MM-yyyy:HH:mm:ss'}}</div>
+        <!--chat list-->
+        <div *ngFor=" let user of users">
+          <div class="chatList">
+            <div class="block active" routerLink="/chat/{{user.usernameCompanion}}" [queryParams]="{
+                          chatId : user.chat_id,
+                          firstNameCompanion : user.firstNameCompanion,
+                          lastNameCompanion : user.lastNameCompanion
+                      }" routerLinkActive="active">
+              <div class="img-bx">
+                <img src="" class="cover">
               </div>
-              <div class="message_p">
-                <p>{{user.firstName}} {{user.lastName}} send {{user.message}}<p>
-                  <b>1</b>
+              <div class="details">
+                <div class="listHead">
+                  <h4 routerLink="/profile/{{user.usernameCompanion}}"
+                      routerLinkActive="active">{{user.firstNameCompanion}} {{user.lastNameCompanion}} </h4>
+                  <div class="time">{{ user.date | date:'dd-MM-yyyy:HH:mm:ss'}}</div>
+                </div>
+                <div class="message_p">
+                  <p>{{user.firstName}} {{user.lastName}} send {{user.message}}<p>
+                    <b>1</b>
+                </div>
               </div>
             </div>
           </div>
@@ -59,7 +66,7 @@
       </div>
     </div>
   </div>
-</div>
+</ng-template>
 <ng-template #loggedOut>
   Авторизуйтесь!
 </ng-template>

@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {TokenStorageService} from "../auth/token-storage.service";
-import {FindSericeService} from "./find-serice.service";
+import {FindService} from "./find.service";
 import {FindRequest} from "./findRequest";
 import {AppComponent} from "../app.component";
 
@@ -19,18 +19,20 @@ export class FindComponent implements OnInit {
   constructor(private tokenStorage: TokenStorageService,
               private f:AppComponent,
 
-              private findServices: FindSericeService) { }
+              private findServices: FindService) { }
 
   findUsers() {
     console.log("find users " + this.f.text, this.tokenStorage.getToken());
     let find = new FindRequest(this.f.text);
-    this.findServices.findInfo(find, this.tokenStorage.getHttpOptions()).subscribe( data => {
-      console.log(data);
-      console.log(data.users);
-      this.users = data.users;
-      console.log(this.users);
-      alert("success")
-    },error=>alert("unsuccess"))
+    this.findServices.findInfo(find, this.tokenStorage.getHttpOptions())
+      .subscribe( response => {
+        console.log(response);
+        this.users = response.data.users;
+      },error=>{
+        console.log(error)
+        alert("unsuccess")
+
+      });
   }
 
   ngOnInit(): void {

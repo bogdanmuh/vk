@@ -1,33 +1,35 @@
 <app-side-bar></app-side-bar>
 <div *ngIf="isLoggedIn; else loggedOut">
-  <strong>Username: </strong> {{username}}  <br/>
-  <strong>Roles:</strong> <div *ngFor=" let role of roles">{{role}} </div><br/>
-  <strong>firstName: </strong> {{firstName}}  <br/>
-  <strong>lastName: </strong> {{lastName}}  <br/>
-  <strong>date: </strong> {{date}}  <br/>
-  <strong>online: </strong> {{isOnline}}  <br/>
-  <strong>friends: </strong> <div *ngFor=" let role of friends">{{role}} </div><br/>
+  <div *ngIf="isError; else b">
+    error message: {{errorMessage}}
+  </div>
+  <ng-template #b>
+    <strong>Username: </strong> {{username}}  <br/>
+    <strong>Roles:</strong> <div *ngFor=" let role of roles">{{role}} </div><br/>
+    <strong>firstName: </strong> {{firstName}}  <br/>
+    <strong>lastName: </strong> {{lastName}}  <br/>
+    <strong>date: </strong> {{date}}  <br/>
+    <strong>online: </strong> {{isOnline}}  <br/>
+    <strong>friends: </strong> <div *ngFor=" let role of friends">{{role}} </div><br/>
 
-  <div *ngIf="isCurrentUser; else a">
-    <div class="строка контейнера">
-      <div class="col-md-6">
-        <input type="file" (change)="onFileChanged($event)">
+    <div *ngIf="isCurrentUser; else a">
+      <div class="строка контейнера">
+        <div class="col-md-6">
+          <input type="file" (change)="onFileChanged($event)">
 
-      </div>
-      <div class="col-md-6">
-        <input type="button" (click)="onUpload()" value="upload">
+        </div>
+        <div class="col-md-6">
+          <input type="button" (click)="onUpload()" value="upload">
+        </div>
       </div>
     </div>
-  </div>
-  <img [src]="retrievedImage">
-  <ng-template #a>
-    <input type="button" (click)="addFriends()" value="Добавить в друзья ">!
-    <input type="button" (click)="sendMessage()" value="Написать сообщение " >!
+    <img [src]="retrievedImage">
+    <ng-template #a>
+      <input type="button" (click)="addFriends()" value="Добавить в друзья ">!
+      <input type="button" (click)="sendMessage()" value="Написать сообщение " >!
+    </ng-template>
   </ng-template>
 </div>
-
-
-
 
 <ng-template #loggedOut>
   Авторизуйтесь!

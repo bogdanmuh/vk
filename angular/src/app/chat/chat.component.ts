@@ -3,7 +3,7 @@ import {ActivatedRoute} from "@angular/router";
 import {MessageRequest} from "./MesssageRequest";
 import {TokenStorageService} from "../auth/token-storage.service";
 import {ChatingService} from "./chating.service";
-import {MessageResponse} from "./MessageResponse";
+import {Message} from "./Message";
 import {WebSocketService} from "../services/web-socket.service";
 import {NewChatRequest} from "./NewChatRequest";
 
@@ -14,11 +14,11 @@ import {NewChatRequest} from "./NewChatRequest";
 })
 export class ChatComponent implements OnInit {
   public message: string = "";
-  public usernameCompains: string = "";
-  public idCompains: string;
-  public isCompainsOnline: boolean = false;
+  public usernameCompanion: string = "";
+  public idCompanion: string;
+  public isCompanionOnline: boolean = false;
   public chatId: number = -1;
-  public messages: MessageResponse[] = [];
+  public messages: Message[] = [];
   public lastDate: Date = new Date();
   public isLoggedIn: boolean = this.tokenStorage.getLogIn();
 
@@ -27,39 +27,36 @@ export class ChatComponent implements OnInit {
   public last_and_first_Name: string = "";
   public webSocket: any;
 //TODO перейти на айди вместо username
-  constructor(private actiateRoute: ActivatedRoute,
+  constructor(private activateRoute: ActivatedRoute,
               private tokenStorage: TokenStorageService,
               private chatingService: ChatingService) {
     this.webSocket = new WebSocketService(tokenStorage, this);
-    actiateRoute.queryParams.subscribe(
+    activateRoute.queryParams.subscribe(
       (queryParam: any) => {
-        this.usernameCompains = queryParam['usernameCompains'];
-        this.last_and_first_Name = queryParam['lastNameCompains'] + " " + queryParam['firstNameCompains'];
+        this.chatId = queryParam['chatId'];
+        this.last_and_first_Name = queryParam['lastNameCompanion'] + " " + queryParam['firstNameCompanion'];
       }
     );
-    this.idCompains = "-1"
-    console.log(actiateRoute.snapshot.params['chat_id']);
-    this.chatId = actiateRoute.snapshot.params['chat_id'];
+    this.idCompanion = "-1"
+    console.log(activateRoute.snapshot.params['user_id']);
+    this.usernameCompanion = activateRoute.snapshot.params['user_id'];
     if (this.chatId  == -1) {
       this.chatingService
-        .getFirstMessagess([this.tokenStorage.getUsername(), this.usernameCompains])
-        .subscribe(
-          (data: any)  => {
-            console.log(data);
-            this.messages = data["list"];
-            this.isCompainsOnline = data["online"];
-            this.changeChatId(<number> data["id"])
-          },
+        .getFirstMessage([this.tokenStorage.getUsername(), this.usernameCompanion])
+        .subscribe(response => {
+            console.log(response);
+            this.messages = response.data.list;
+            this.isCompanionOnline = response.data.online;
+            this.changeChatId(response.data.chatId)
+          }
         )
     } else {
       this.chatingService
-        .getFirstMessages(this.chatId)
-        .subscribe(
-          (data: any)  => {
-            console.log(data);
-            this.messages = data["list"];
-            this.isCompainsOnline = data["online"];
-          },
+        .getFirstMessages(this.chatId).subscribe(response  => {
+            console.log(response);
+          this.messages = response.data.list;
+          this.isCompanionOnline = response.data.online;
+          }
         )
     }
   }
@@ -67,29 +64,30 @@ export class ChatComponent implements OnInit {
   ngOnInit(): void {}
 
   sendMessage() {
-    let messageRequest = new MessageRequest(this.tokenStorage.getUsername(), this.usernameCompains, this.message, this.chatId)
+    let messageRequest = new MessageRequest(this.tokenStorage.getUsername(), this.usernameCompanion, this.message, this.chatId)
     console.log("отправляем сообщение" + messageRequest);
     this.webSocket.send(messageRequest);
-    let messageResponse = new MessageResponse(messageRequest.message, messageRequest.sender, messageRequest.date, messageRequest.recipient)
+    let messageResponse = new Message(messageRequest.message, messageRequest.sender, messageRequest.date, messageRequest.recipient)
     this.addNewMessage(messageResponse);
   }
 
   sendNewMessage(){
-    let newChatRequest = new NewChatRequest("",[this.tokenStorage.getUsername(), this.usernameCompains])
-    console.log(newChatRequest);;
+    let newChatRequest = new NewChatRequest("",[this.tokenStorage.getUsername(), this.usernameCompanion])
+    console.log(newChatRequest);
     this.chatingService.findChat(newChatRequest)
-      .subscribe((data: any)  => {
+      .subscribe((response: any)  => {
+        this.chatId = response["data.id"];
         console.log("создали новый chat");
         this.sendMessage();
       });
   }
 
-  addNewMessage(message : MessageResponse) {
+  addNewMessage(message : Message) {
     this.messages.push(message);
   }
 
   printOnline(user: string, online: boolean) : boolean {
-    if (user == this.usernameCompains) {
+    if (user == this.usernameCompanion) {
       return online
     }
     return true;

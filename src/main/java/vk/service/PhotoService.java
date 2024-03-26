@@ -26,7 +26,7 @@ public class PhotoService {
     private String uploadPath;
 
     public void savePhoto(MultipartFile file) throws IOException {
-        if(file == null) return;
+        if (file == null) return;
 
         file.transferTo(toOurDirectories(file));
     }

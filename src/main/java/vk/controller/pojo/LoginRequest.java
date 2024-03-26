@@ -1,4 +1,4 @@
-package vk.pojo;
+package vk.controller.pojo;
 
 import lombok.Data;
 

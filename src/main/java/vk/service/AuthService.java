@@ -1,18 +1,16 @@
 package vk.service;
 
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import vk.pojo.JwtResponse;
-import vk.pojo.LoginRequest;
-import vk.pojo.MessageResponse;
-import vk.security.jwt.JwtUtils;
+import vk.controller.exception.NotActivateAccountException;
+import vk.controller.pojo.JwtResponse;
+import vk.controller.pojo.LoginRequest;
+import vk.config.security.jwt.JwtUtils;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,7 +22,7 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final JwtUtils jwtUtils;
 
-    public ResponseEntity<?> authUser(LoginRequest loginRequest) {
+    public JwtResponse authUser(LoginRequest loginRequest) throws NotActivateAccountException {
         Authentication authentication = authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(
                         loginRequest.getLogin(),
@@ -32,11 +30,10 @@ public class AuthService {
 
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
-        if (userDetails.getActivaCode() != null) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(new MessageResponse("Error: Activate you account"));
-        }
+        if (userDetails.getActivateCode() != null)
+            throw new NotActivateAccountException(
+                    String.format(NotActivateAccountException.message, userDetails.getUsername()));
+
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtUtils.generateJwtToken(authentication);
 
@@ -44,10 +41,10 @@ public class AuthService {
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
 
-        return ResponseEntity.ok(new JwtResponse(jwt,
+        return new JwtResponse(jwt,
                 userDetails.getId(),
                 userDetails.getUsername(),
                 userDetails.getEmail(),
-                roles));
+                roles);
     }
 }

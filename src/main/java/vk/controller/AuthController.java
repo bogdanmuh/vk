@@ -1,12 +1,15 @@
 package vk.controller;
 
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import vk.pojo.LoginRequest;
-import vk.pojo.SignupRequest;
+import vk.controller.exception.EmailIsExistException;
+import vk.controller.exception.NotActivateAccountException;
+import vk.controller.exception.UsernameIsExistException;
+import vk.controller.pojo.ActivateMessageResponse;
+import vk.controller.pojo.JwtResponse;
+import vk.controller.pojo.LoginRequest;
+import vk.controller.pojo.MessageResponse;
+import vk.controller.pojo.SignupRequest;
 import vk.service.AuthService;
 import vk.service.UserService;
 
@@ -20,18 +23,18 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/signin")
-    public ResponseEntity<?> authUser(@RequestBody LoginRequest loginRequest) {
+    public JwtResponse authUser(@RequestBody LoginRequest loginRequest) throws NotActivateAccountException {
         return authService.authUser(loginRequest);
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<?> registerUser(@RequestBody SignupRequest signupRequest) {
+    public MessageResponse registerUser(@RequestBody SignupRequest signupRequest) throws EmailIsExistException, UsernameIsExistException {
         return userService.registerUser(signupRequest);
     }
 
     @GetMapping("/activate/{code}")
-    public ResponseEntity<?> activate(@PathVariable String code) {
-        return ResponseEntity.ok(userService.activateUser(code));
+    public ActivateMessageResponse activate(@PathVariable String code) {
+        return userService.activateUser(code);
     }
 
 }

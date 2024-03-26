@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
-import { AuthService } from '../auth/auth.service';
+import { AuthService } from '../services/auth.service';
 import { TokenStorageService } from '../auth/token-storage.service';
 import { AuthLoginInfo } from '../auth/login-info';
 import {Router} from "@angular/router";
@@ -14,7 +14,6 @@ export class LoginComponent implements OnInit {
 
   public username: string = "";
   public password: string = "";
-
   isLoggedIn = false;
   isLoginFailed = false;
   errorMessage = '';
@@ -35,23 +34,22 @@ export class LoginComponent implements OnInit {
   onSubmit() {
     let loginInfo = new AuthLoginInfo(this.username, this.password);
     console.log(loginInfo);
-    this.authService.attemptAuth(loginInfo).subscribe(
-      data => {
-        this.tokenStorage.saveToken(data.token);
-        this.tokenStorage.saveUsername(data.username);
-        this.tokenStorage.saveId(data.id);
-        this.tokenStorage.saveAuthorities(data.roles);
+    this.authService.attemptAuth(loginInfo).subscribe(response => {
+        console.log(response);
+        this.tokenStorage.saveToken(response.data.token);
+        this.tokenStorage.saveUsername(response.data.username);
+        this.tokenStorage.saveId(response.data.id);
+        this.tokenStorage.saveAuthorities(response.data.roles);
         this.isLoggedIn = true;
         this.isLoginFailed = false;
-
         this.roles = this.tokenStorage.getAuthorities();
-        this.router.navigate(['/profile/' + data.username])
+        this.router.navigate(['/profile/' + response.data.username])
       },
-      error => {
-        console.log(error);
-        alert(error.error.message);
-        this.errorMessage = error.error.message;
+      response => {
+        console.log(response);
+        alert(response.error["message"]);
         this.isLoginFailed = true;
+        this.errorMessage = response.error["message"];
       }
     );
   }

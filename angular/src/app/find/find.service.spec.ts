@@ -1,13 +1,12 @@
 import { TestBed } from '@angular/core/testing';
+import { FindService } from './find.service';
 
-import { FindSericeService } from './find-serice.service';
-
-describe('FindSericeService', () => {
-  let service: FindSericeService;
+describe('FindService', () => {
+  let service: FindService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(FindSericeService);
+    service = TestBed.inject(FindService);
   });
 
   it('should be created', () => {

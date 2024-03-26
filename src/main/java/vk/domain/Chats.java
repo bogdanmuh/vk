@@ -1,16 +1,16 @@
 package vk.domain;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
-import vk.controller.pojo.AllChatResponse;
 import vk.domain.dto.ChatDto;
 
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
-@Data
+@Getter
+
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor

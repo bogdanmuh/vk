@@ -2,6 +2,8 @@ package vk.service;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import vk.controller.exception.ChatNotFoundException;
+import vk.controller.exception.UserNofFoundException;
 import vk.controller.pojo.NewChatRequest;
 import vk.domain.Chats;
 import vk.domain.User;
@@ -19,7 +21,7 @@ public class ChatsService {
     private final ChatsRepository chatsRepository;
     private final UserService userService;
 
-    public Chats save(NewChatRequest newChatRequest) {
+    public Chats save(NewChatRequest newChatRequest) throws UserNofFoundException {
         Set<User> users = userService.getUsers(newChatRequest.getParticipantsUsername());
         Optional<Chats> chatsData = getChats(users);
         if (chatsData.isEmpty())
@@ -38,27 +40,26 @@ public class ChatsService {
         return Optional.empty();
     }
 
-    public Optional<Chats> findById(Long id){
-        return chatsRepository.findById(id);
+    public Chats findById(Long id) throws ChatNotFoundException {
+        return chatsRepository.findById(id)
+                .orElseThrow(() -> new ChatNotFoundException(String.format(ChatNotFoundException.NotFound,id)));
     }
 
-    public User getCompains(Long chat_id, Long user_id){
-        Optional<Chats> chat = findById(chat_id);
-        Long idCompains = null;
-        if (chat.isPresent()) {
-            Set<User> users = chat.get().getUsers();
-            if (users.size() == 2) {
-                for (User user : users) {
-                    if (!user_id.equals(user.getId())){
-                        idCompains = user.getId();
-                    }
+    public User getCompanions(Long chat_id, Long user_id) throws ChatNotFoundException, UserNofFoundException {
+        Chats chat = findById(chat_id);
+        Long idCompanion = null;
+        Set<User> users = chat.getUsers();
+        if (users.size() == 2) {
+            for (User user : users) {
+                if (!user_id.equals(user.getId())){
+                    idCompanion = user.getId();
                 }
             }
         }
-        return userService.getUser(idCompains).get();
+        return userService.getUser(idCompanion);
     }
 
-    public List<Chats> findCompains(Long user_id){
+    public List<Chats> findCompanions(Long user_id){
         return null;// chatsRepository.findByUsers_User_id(user_id);
     }
 

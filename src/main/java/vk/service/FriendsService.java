@@ -1,8 +1,8 @@
 package vk.service;
 
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import vk.controller.exception.UserNofFoundException;
 import vk.domain.Friends;
 import vk.domain.User;
 import vk.repos.FriendsRepository;
@@ -14,12 +14,13 @@ import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
-public class FriendsSercive {
+public class FriendsService {
 
     private final FriendsRepository repository;
+
     private final UserRepository userRepository;
 
-    public void add(String user, String friends){
+    public void add(String user, String friends) throws UserNofFoundException {
         Optional<User> user1 = userRepository.findByUsername(user);
         Optional<User> user2 = userRepository.findByUsername(friends);
         if(user1.isPresent() && user2.isPresent()) {

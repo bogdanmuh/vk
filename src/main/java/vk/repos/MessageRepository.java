@@ -63,7 +63,7 @@ public interface MessageRepository extends JpaRepository<Message, Long> {
     "     group by m.chat_id, m.user_id, m.message, m.date " +
     "     order by m.date)  " )  // limit 20*/
     @Query(nativeQuery = true)
-    List <AllChatResponse> getLastMesasgeFromChats(Long user_id);
+    List <AllChatResponse> getLastMessageFromChats(Long user_id);
 
 
 

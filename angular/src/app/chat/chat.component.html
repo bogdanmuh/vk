@@ -15,13 +15,13 @@
             <div class="message">
               <div class="photo"
                    style="background-image: url(https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80);">
-                <div *ngIf="printOnline(message.from, isCompainsOnline)">
+                <div *ngIf="printOnline(message.from, isCompanionOnline)">
                   <div class="online"></div>
                 </div>
               </div>
-              <p [ngClass]="{'text': message.from == usernameCompains,
-                                      'text2': message.from !== usernameCompains }">
-                {{message.from}} write {{message.message}}
+              <p [ngClass]="{'text': message.from == usernameCompanion,
+                                      'text2': message.from !== usernameCompanion }">
+                {{message.message}}
               </p>
             </div>
             <p class="time"> {{ message.date | date :'shortTime'}}</p>

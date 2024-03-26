@@ -2,7 +2,7 @@
 import * as Stomp from 'stompjs';
 import * as SockJS from 'sockjs-client';
 
-import {MessageResponse} from "../chat/MessageResponse";
+import {Message} from "../chat/Message";
 import {TokenStorageService} from "../auth/token-storage.service";
 import {ChatComponent} from "../chat/chat.component";
 
@@ -71,7 +71,7 @@ export class WebSocketService {
     this.stompClient.send("/app/topic", this.tokenStorage.getHttpOptions(), JSON.stringify(message));
   }
 
-  addNewMessage(message: MessageResponse) {
+  addNewMessage(message: Message) {
     console.log("add message :: " + message.recipient);
     this.chatComponent.addNewMessage(message);
   }

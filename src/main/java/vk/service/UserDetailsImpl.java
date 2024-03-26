@@ -14,22 +14,22 @@ import java.util.stream.Collectors;
 public class UserDetailsImpl implements UserDetails {
 
     private static final long serialVersionUID = 1L;
-    private Long id ;
+    private final Long id ;
     private final String username;
     private final String email;
     private final Collection<? extends GrantedAuthority> authorities;
     @JsonIgnore
     private final String password;
-    private final String activaCode;
+    private final String activateCode;
 
 
-    public UserDetailsImpl(Long id, String username, String email,String password, Collection<? extends GrantedAuthority> authorities, String activaCode) {
+    public UserDetailsImpl(Long id, String username, String email,String password, Collection<? extends GrantedAuthority> authorities, String activateCode) {
         this.id = id;
         this.username = username;
         this.email = email;
         this.authorities = authorities;
         this.password = password;
-        this.activaCode = activaCode;
+        this.activateCode = activateCode;
     }
 
     public static UserDetailsImpl build(User user){

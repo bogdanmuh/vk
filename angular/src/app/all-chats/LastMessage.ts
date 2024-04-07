@@ -1,4 +1,4 @@
-export class User {
+export class LastMessage {
   constructor(public username: string,
               public date: Date ,
               public message: string ,
@@ -8,6 +8,7 @@ export class User {
               public usernameCompanion: string ,
               public firstNameCompanion: string ,
               public lastNameCompanion: string ,
+              public chatName: string ,
               ) {
     this.username = username;
     this.date = date;
@@ -18,5 +19,6 @@ export class User {
     this.usernameCompanion = usernameCompanion;
     this.firstNameCompanion = firstNameCompanion;
     this.lastNameCompanion = lastNameCompanion;
+    this.chatName = chatName;
   }
 }

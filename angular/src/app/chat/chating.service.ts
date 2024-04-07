@@ -7,6 +7,7 @@ import {NewChatRequest} from "./NewChatRequest";
 import {TokenStorageService} from "../auth/token-storage.service";
 import {StandardResponse} from "../StandartResponse";
 import {Response} from "./Response";
+import {Chat} from "./Chat";
 
 @Injectable({
   providedIn: 'root'
@@ -35,27 +36,26 @@ export class ChatingService {
       this.tokenStorage.getHttpOptions());
   }
 
-  findChat(newChatRequest: NewChatRequest){
+  findChat(newChatRequest: NewChatRequest) : Observable<StandardResponse<Chat>> {
     console.log(this.newChatUrl)
-    return this.http.post(
+    return this.http.post <StandardResponse<Chat>> (
       this.newChatUrl,
       newChatRequest,
       this.tokenStorage.getHttpOptions());
   }
 
   getFirstMessages(chatId: number) : Observable<StandardResponse<Response>>  {
-    console.log(this.chatingUrl + + "?id=" + chatId)
+    console.log(this.chatingUrl + "?id=" + chatId + "&sender=" + this.tokenStorage.getUsername())
     return this.http.get<StandardResponse<Response>>(
-      this.chatingUrl + "?id=" + chatId,
+      this.chatingUrl + "?id=" + chatId + "&sender=" + this.tokenStorage.getUsername(),
       this.tokenStorage.getHttpOptions());
   }
 
-  getFirstMessage(usernames: String []) : Observable<StandardResponse<Response>>  {
-    console.log(this.chatingUrl + + "?usernames=" + usernames)
+  getFirstMessage(companion: String) : Observable<StandardResponse<Response>>  {
+    console.log(this.chatingUrl + "?companion=" + companion + "&sender=" + this.tokenStorage.getUsername())
     return this.http.get<StandardResponse<Response>>(
-      this.chatingUrl + "?usernames=",
+      this.chatingUrl + "?companion=" + companion + "&sender=" + this.tokenStorage.getUsername(),
       this.tokenStorage.getHttpOptions());
   }
-
 
 }

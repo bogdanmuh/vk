@@ -10,8 +10,14 @@ import vk.controller.pojo.JwtResponse;
 import vk.controller.pojo.LoginRequest;
 import vk.controller.pojo.MessageResponse;
 import vk.controller.pojo.SignupRequest;
+import vk.domain.Role;
+import vk.domain.User;
 import vk.service.AuthService;
+import vk.service.MailSender;
+import vk.service.RoleService;
 import vk.service.UserService;
+
+import java.util.Set;
 
 @RestController
 @RequestMapping("/")
@@ -21,6 +27,8 @@ public class AuthController {
 
     private final UserService userService;
     private final AuthService authService;
+    private final RoleService roleService;
+    private final MailSender mailSender;
 
     @PostMapping("/signin")
     public JwtResponse authUser(@RequestBody LoginRequest loginRequest) throws NotActivateAccountException {
@@ -29,7 +37,11 @@ public class AuthController {
 
     @PostMapping("/signup")
     public MessageResponse registerUser(@RequestBody SignupRequest signupRequest) throws EmailIsExistException, UsernameIsExistException {
-        return userService.registerUser(signupRequest);
+        roleService.createRole();
+        Set<Role> roles = roleService.validationRole(signupRequest.getRoles());
+        User user = userService.registerUser(signupRequest, roles);
+        mailSender.sendValidationMessage(user);
+        return new MessageResponse("User CREATED");
     }
 
     @GetMapping("/activate/{code}")

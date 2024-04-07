@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {User} from "./User";
+import {LastMessage} from "./LastMessage";
 import {AllChatService} from "./all-chat.service";
 import {TokenStorageService} from "../auth/token-storage.service";
 
@@ -10,7 +10,7 @@ import {TokenStorageService} from "../auth/token-storage.service";
 })
 export class AllChatComponent  implements OnInit {
   public message: string = "";
-  public users: User[] = [];
+  public lastMessages: LastMessage[] = [];
   isLoggedIn: boolean = this.storageService.getLogIn();
   isError: boolean = false;
   errorMessage: string = "";
@@ -25,13 +25,20 @@ export class AllChatComponent  implements OnInit {
     this.allChatService.getCompanions().subscribe(
       response => {
         console.log(response)
-        this.users = response["data"];
+        this.lastMessages = response["data"];
       },response => {
         console.log(response);
         alert(response.error["message"]);
         this.isError = true;
         this.errorMessage = response.error["message"];
       })
+  }
+
+  getName(chatName: string, firstName: string, lastName: string): string {
+    if (chatName != "") {
+      return chatName;
+    }
+    return firstName + " " + lastName;
   }
 
 

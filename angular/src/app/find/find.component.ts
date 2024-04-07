@@ -3,6 +3,7 @@ import {TokenStorageService} from "../auth/token-storage.service";
 import {FindService} from "./find.service";
 import {FindRequest} from "./findRequest";
 import {AppComponent} from "../app.component";
+import {User} from "./User";
 
 @Component({
   selector: 'app-find',
@@ -12,7 +13,7 @@ import {AppComponent} from "../app.component";
 export class FindComponent implements OnInit {
   text!: string;
 
-  users: String[]=[];
+  users: User[]=[];
 
   public isLoggedIn: boolean = this.tokenStorage.getLogIn();
 
@@ -23,16 +24,19 @@ export class FindComponent implements OnInit {
 
   findUsers() {
     console.log("find users " + this.f.text, this.tokenStorage.getToken());
-    let find = new FindRequest(this.f.text);
-    this.findServices.findInfo(find, this.tokenStorage.getHttpOptions())
-      .subscribe( response => {
-        console.log(response);
-        this.users = response.data.users;
-      },error=>{
-        console.log(error)
-        alert("unsuccess")
+    if (this.f.text != null && this.f.text != "") {
+      let find = new FindRequest(this.f.text);
+      this.findServices.findInfo(find, this.tokenStorage.getHttpOptions())
+        .subscribe( response => {
+          console.log(response);
+          this.users = response.data;
+        },error=>{
+          console.log(error)
+          alert("unsuccess")
 
-      });
+        });
+    }
+
   }
 
   ngOnInit(): void {

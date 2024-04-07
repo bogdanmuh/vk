@@ -3,8 +3,6 @@ package vk.controller;
 import lombok.AllArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import vk.controller.exception.ChatNotFoundException;
-import vk.controller.exception.UserNofFoundException;
 import vk.controller.pojo.AllChatResponse;
 import vk.service.MessageService;
 
@@ -20,7 +18,7 @@ public class AllChatController {
     private final MessageService messageService;
 
     @GetMapping("/allChat")
-    public List<AllChatResponse> getCompanions(@RequestParam Long user_id) throws ChatNotFoundException, UserNofFoundException {
+    public List<AllChatResponse> getCompanions(@RequestParam Long user_id) {
         return messageService.getLastMessageFromChats(user_id);
     }
 

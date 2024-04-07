@@ -4,7 +4,7 @@
 
   <strong>People:</strong>
   <div *ngFor=" let user of users">
-    <a routerLink="/profile/{{user}}" routerLinkActive="active">{{user}}</a>
+    <a routerLink="/profile/{{user.id}}" routerLinkActive="active"><br/>{{user.lastName}} + {{user.firstName}} + {{user.username}}<br/> </a>
   </div>
 
 </div>

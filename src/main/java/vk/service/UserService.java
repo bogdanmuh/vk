@@ -7,17 +7,14 @@ import vk.controller.exception.EmailIsExistException;
 import vk.controller.exception.UserNofFoundException;
 import vk.controller.exception.UsernameIsExistException;
 import vk.controller.pojo.ActivateMessageResponse;
-import vk.controller.pojo.FindResponse;
-import vk.controller.pojo.ProfileResponse;
-import vk.domain.User;
-import vk.controller.pojo.MessageResponse;
 import vk.controller.pojo.SignupRequest;
+import vk.domain.Role;
+import vk.domain.User;
+import vk.domain.dto.UserDto;
 import vk.repos.UserRepository;
 
-import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -25,14 +22,10 @@ public class UserService {
 
     private static final Map<String,String> onlineUsers = new ConcurrentHashMap<>();//TODO  подумать
     private final UserRepository userRepository;
-    private final PhotoService photoService;
-    private final FriendsService friendsService;
     private final PasswordEncoder passwordEncoder;
-    private final RoleService roleService;
-    private final MailSender mailSender;
 
-    public Set<User> getUsers(String[] usernames) throws UserNofFoundException  {
-        Set<User> users = new HashSet<>();
+    public HashSet<User> getUsers(String[] usernames) throws UserNofFoundException  {
+        HashSet<User> users = new HashSet<>();
         for (String username : usernames) {
             User user = getUser(username);
             users.add(user);
@@ -40,18 +33,17 @@ public class UserService {
         return users;
     }
 
-    public FindResponse findAllUsers(String text) {
-        List<String> users = userRepository.findAll().stream()
-                .map(User::getUsername)
-                .filter(username->username.contains(text))
-                .collect(Collectors.toList());
-        return new FindResponse(users);
+    public List<UserDto> findAllUsers(String text) {
+        return userRepository.findByText(text);
     }
 
     public User getUser(String username) throws UserNofFoundException {
         return userRepository.findByUsername(username)
                 .orElseThrow(() -> new UserNofFoundException (
                     String.format(UserNofFoundException.UserWithUsernameNotFound, username)));
+    }
+    public Optional<User> getUserOptional(String username)  {
+        return userRepository.findByUsername(username);
     }
 
     public User getUser(Long id) throws UserNofFoundException {
@@ -60,15 +52,6 @@ public class UserService {
                         String.format(UserNofFoundException.UserWithIdNotFound, id)));
     }
 
-    public ProfileResponse getProfileResponse(String userId) throws IOException, UserNofFoundException {
-        User user = getUser(userId);
-        return new ProfileResponse(
-                getUser(userId),
-                isOnline(user.getUsername()),
-                friendsService.getFriends(userId),
-                photoService.getPhoto(userId)
-        );
-    }
 
     public ActivateMessageResponse activateUser(String code) {
         Optional<User> user = userRepository.findByActivateCode(code);
@@ -90,8 +73,7 @@ public class UserService {
         }
     }
 
-    public MessageResponse registerUser(SignupRequest signupRequest) throws UsernameIsExistException, EmailIsExistException {
-        roleService.createRole();
+    public User registerUser(SignupRequest signupRequest,Set<Role> roles) throws UsernameIsExistException, EmailIsExistException {
         if (userRepository.existsByUsername(signupRequest.getUsername()))
             throw new UsernameIsExistException(
                     String.format(UsernameIsExistException.usernameIsExist, signupRequest.getUsername()));
@@ -108,11 +90,10 @@ public class UserService {
                 signupRequest.getEmail(),
                 passwordEncoder.encode(signupRequest.getPassword()),
                 signupRequest.getDate(),
-                roleService.validationRole(signupRequest.getRoles()));
+                roles);
 
         userRepository.save(user);
-        mailSender.sendValidationMessage(user);
-        return new MessageResponse("User CREATED");
+        return user;
     }
 
     public void addUser(String sessionId, String username){

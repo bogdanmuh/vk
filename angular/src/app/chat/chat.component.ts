@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
 import {MessageRequest} from "./MesssageRequest";
 import {TokenStorageService} from "../auth/token-storage.service";
@@ -22,10 +22,10 @@ export class ChatComponent implements OnInit {
   public lastDate: Date = new Date();
   public isLoggedIn: boolean = this.tokenStorage.getLogIn();
 
-  public isNewChat: boolean = false;
+  @Input() public isNewChat: boolean = false;
 
   public last_and_first_Name: string = "";
-  public webSocket: any;
+  public webSocket: WebSocketService;
 //TODO перейти на айди вместо username
   constructor(private activateRoute: ActivatedRoute,
               private tokenStorage: TokenStorageService,
@@ -42,7 +42,7 @@ export class ChatComponent implements OnInit {
     this.usernameCompanion = activateRoute.snapshot.params['user_id'];
     if (this.chatId  == -1) {
       this.chatingService
-        .getFirstMessage([this.tokenStorage.getUsername(), this.usernameCompanion])
+        .getFirstMessage(this.usernameCompanion)
         .subscribe(response => {
             console.log(response);
             this.messages = response.data.list;
@@ -59,13 +59,14 @@ export class ChatComponent implements OnInit {
           }
         )
     }
+
   }
 
   ngOnInit(): void {}
 
   sendMessage() {
     let messageRequest = new MessageRequest(this.tokenStorage.getUsername(), this.usernameCompanion, this.message, this.chatId)
-    console.log("отправляем сообщение" + messageRequest);
+    console.log("отправляем сообщение" + messageRequest +  this.chatId);
     this.webSocket.send(messageRequest);
     let messageResponse = new Message(messageRequest.message, messageRequest.sender, messageRequest.date, messageRequest.recipient)
     this.addNewMessage(messageResponse);
@@ -76,8 +77,9 @@ export class ChatComponent implements OnInit {
     console.log(newChatRequest);
     this.chatingService.findChat(newChatRequest)
       .subscribe((response: any)  => {
-        this.chatId = response["data.id"];
-        console.log("создали новый chat");
+        console.log(response);
+        this.chatId = response.data.id;
+        console.log("создали новый chat" + this.chatId );
         this.sendMessage();
       });
   }
@@ -94,8 +96,11 @@ export class ChatComponent implements OnInit {
   }
 
   changeChatId(id: number){
-    this.isNewChat = id == -1;
+    console.log(this.isNewChat);
+    this.isNewChat = id != -1;
     this.chatId = id;
+    console.log(this.isNewChat);
+    this.ngOnInit();
   }
 
 }

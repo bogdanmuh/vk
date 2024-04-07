@@ -39,24 +39,24 @@
         </div>
 
         <!--chat list-->
-        <div *ngFor=" let user of users">
+        <div *ngFor=" let message of lastMessages">
           <div class="chatList">
-            <div class="block active" routerLink="/chat/{{user.usernameCompanion}}" [queryParams]="{
-                          chatId : user.chat_id,
-                          firstNameCompanion : user.firstNameCompanion,
-                          lastNameCompanion : user.lastNameCompanion
+            <div class="block active" routerLink="/chat/{{message.usernameCompanion}}" [queryParams]="{
+                          chatId : message.chat_id,
+                          firstNameCompanion : message.firstNameCompanion,
+                          lastNameCompanion : message.lastNameCompanion
                       }" routerLinkActive="active">
               <div class="img-bx">
                 <img src="" class="cover">
               </div>
               <div class="details">
                 <div class="listHead">
-                  <h4 routerLink="/profile/{{user.usernameCompanion}}"
-                      routerLinkActive="active">{{user.firstNameCompanion}} {{user.lastNameCompanion}} </h4>
-                  <div class="time">{{ user.date | date:'dd-MM-yyyy:HH:mm:ss'}}</div>
+                  <h4 routerLink="/profile/{{message.usernameCompanion}}"
+                      routerLinkActive="active">{{getName(message.chatName, message.firstNameCompanion, message.lastNameCompanion)}}</h4>
+                  <div class="time">{{ message.date | date:'dd-MM-yyyy:HH:mm:ss'}}</div>
                 </div>
                 <div class="message_p">
-                  <p>{{user.firstName}} {{user.lastName}} send {{user.message}}<p>
+                  <p>{{message.message}}<p>
                     <b>1</b>
                 </div>
               </div>

@@ -1,9 +1,11 @@
 package vk.controller.pojo;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.util.Date;
 @Data
+@AllArgsConstructor
 public class AllChatResponse {
 
     private String username;
@@ -15,13 +17,6 @@ public class AllChatResponse {
     private String usernameCompanion;
     private String firstNameCompanion;
     private String lastNameCompanion;
+    private String chatName;
 
-    public AllChatResponse(String username, String firstName, String lastName, Date date, String message, Long chat_id) {
-        this.username = username;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.date = date;
-        this.message = message;
-        this.chat_id = chat_id;
-    }
 }

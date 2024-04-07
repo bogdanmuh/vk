@@ -8,12 +8,13 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import vk.controller.exception.UserNofFoundException;
 import vk.controller.pojo.FriendsRequest;
+import vk.controller.pojo.ProfileResponse;
+import vk.domain.User;
 import vk.service.FriendsService;
 import vk.service.PhotoService;
 import vk.service.UserService;
 
 import java.io.IOException;
-
 
 
 @RestController
@@ -27,8 +28,15 @@ public class ProfileController {
     private final UserService userService;
 
     @GetMapping("/{userId}")
-    public ResponseEntity<?> getUser(@PathVariable String userId) throws IOException, UserNofFoundException {
-        return ResponseEntity.ok (userService.getProfileResponse(userId));
+    public ProfileResponse getUser(@PathVariable String userId) throws IOException, UserNofFoundException {
+        User user = userService.getUser(userId);
+        return new ProfileResponse(
+                user,
+                userService.isOnline(user.getUsername()),
+                friendsService.getFriends(userId),
+                photoService.getPhoto(userId)
+        );
+
     }
 
     @PostMapping("/upload")
@@ -39,7 +47,9 @@ public class ProfileController {
 
     @PostMapping("/friend")
     public BodyBuilder addFriends(@RequestBody FriendsRequest request) throws UserNofFoundException {
-        friendsService.add(request.getUsername(),request.getFriend());
+        User user = userService.getUser(request.getUsername());
+        User friend = userService.getUser(request.getFriend());
+        friendsService.add(user,friend);
         return ResponseEntity.status(HttpStatus.OK);
     }
 

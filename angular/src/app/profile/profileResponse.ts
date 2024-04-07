@@ -1,5 +1,6 @@
 export class ProfileResponse {
-  constructor(public firstName: string,
+  constructor(public id: number,
+              public firstName: string,
               public lastName: string,
               public date: any,
               public username: string,
@@ -8,7 +9,7 @@ export class ProfileResponse {
               public online: boolean,
               public roles: string[],
               public friends: string[]) {
-
+    this.id = id
     this.imageModel = imageModel;
     this.firstName = firstName;
     this.lastName = lastName;
